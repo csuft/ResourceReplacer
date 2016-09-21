@@ -317,7 +317,7 @@
      <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_F">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>文件(&amp;F)</string>
     </property>
@@ -325,14 +325,14 @@
     <addaction name="actionCloseFile"/>
     <addaction name="actionQuitApplication"/>
    </widget>
-   <widget class="QMenu" name="menu_A">
+   <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>关于(&amp;A)</string>
     </property>
     <addaction name="actionDeveloper"/>
    </widget>
-   <addaction name="menu_F"/>
-   <addaction name="menu_A"/>
+   <addaction name="menuFile"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpenFile">

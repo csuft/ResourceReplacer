@@ -81,8 +81,8 @@ public:
     QLineEdit *destImagePathLineEdit;
     QPushButton *replaceImageButton;
     QMenuBar *menuBar;
-    QMenu *menu_F;
-    QMenu *menu_A;
+    QMenu *menuFile;
+    QMenu *menuAbout;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *ReplaceAETemplateClass)
@@ -299,21 +299,21 @@ public:
         menuBar = new QMenuBar(ReplaceAETemplateClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 600, 23));
-        menu_F = new QMenu(menuBar);
-        menu_F->setObjectName(QStringLiteral("menu_F"));
-        menu_A = new QMenu(menuBar);
-        menu_A->setObjectName(QStringLiteral("menu_A"));
+        menuFile = new QMenu(menuBar);
+        menuFile->setObjectName(QStringLiteral("menuFile"));
+        menuAbout = new QMenu(menuBar);
+        menuAbout->setObjectName(QStringLiteral("menuAbout"));
         ReplaceAETemplateClass->setMenuBar(menuBar);
         statusBar = new QStatusBar(ReplaceAETemplateClass);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         ReplaceAETemplateClass->setStatusBar(statusBar);
 
-        menuBar->addAction(menu_F->menuAction());
-        menuBar->addAction(menu_A->menuAction());
-        menu_F->addAction(actionOpenFile);
-        menu_F->addAction(actionCloseFile);
-        menu_F->addAction(actionQuitApplication);
-        menu_A->addAction(actionDeveloper);
+        menuBar->addAction(menuFile->menuAction());
+        menuBar->addAction(menuAbout->menuAction());
+        menuFile->addAction(actionOpenFile);
+        menuFile->addAction(actionCloseFile);
+        menuFile->addAction(actionQuitApplication);
+        menuAbout->addAction(actionDeveloper);
 
         retranslateUi(ReplaceAETemplateClass);
 
@@ -357,8 +357,8 @@ public:
         replaceImageButton->setText(QApplication::translate("ReplaceAETemplateClass", "\347\241\256\345\256\232", 0));
         tabWidget->setTabText(tabWidget->indexOf(replaceImageTab), QApplication::translate("ReplaceAETemplateClass", "\346\250\241\346\235\277\345\233\276\347\211\207\346\233\277\346\215\242", 0));
         tabWidget->setTabToolTip(tabWidget->indexOf(replaceImageTab), QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\344\272\214\350\277\233\345\210\266\346\250\241\346\235\277\346\226\207\344\273\266\344\270\255\347\232\204\346\214\207\345\256\232\345\233\276\347\211\207", 0));
-        menu_F->setTitle(QApplication::translate("ReplaceAETemplateClass", "\346\226\207\344\273\266(&F)", 0));
-        menu_A->setTitle(QApplication::translate("ReplaceAETemplateClass", "\345\205\263\344\272\216(&A)", 0));
+        menuFile->setTitle(QApplication::translate("ReplaceAETemplateClass", "\346\226\207\344\273\266(&F)", 0));
+        menuAbout->setTitle(QApplication::translate("ReplaceAETemplateClass", "\345\205\263\344\272\216(&A)", 0));
     } // retranslateUi
 
 };
