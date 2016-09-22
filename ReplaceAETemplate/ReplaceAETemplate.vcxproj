@@ -155,6 +155,7 @@
     <ClCompile Include="UI\main.cpp" />
     <ClCompile Include="UI\replaceaetemplate.cpp" />
     <ClCompile Include="Utilities\tinyxml2.cpp" />
+    <ClCompile Include="Utilities\XMLParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="UI\replaceaetemplate.h">
@@ -199,6 +200,7 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_replaceaetemplate.h" />
     <ClInclude Include="Utilities\tinyxml2.h" />
+    <ClInclude Include="Utilities\XMLParser.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Resource\replaceaetemplate.qrc">

@@ -53,6 +53,9 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_replaceaetemplate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Utilities\XMLParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="UI\replaceaetemplate.h">
@@ -70,6 +73,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_replaceaetemplate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\XMLParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
