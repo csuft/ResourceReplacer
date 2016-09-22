@@ -9,7 +9,7 @@ XMLParser::XMLParser(const std::string& file)
 
 XMLParser::~XMLParser()
 {
-
+	delete mXMLDocument;
 }
 
 void XMLParser::loadTemplateFile()
@@ -40,7 +40,7 @@ QMap<QString, int> XMLParser::parseTemplateText()
 			if (stringElement)
 			{
 				const char* stringValue = stringElement->GetText();
-				if (strcmp(stringValue, ""))
+				if (stringValue != nullptr && strcmp(stringValue, ""))
 				{
 					textMap.insert(stringValue, index);
 				}				

@@ -19,9 +19,9 @@ public:
 	bool replaceTemplateText(const std::string& newText, const int index);
 	bool replaceTemplateImage(const std::string& newImagePath, const int index);
 	void saveAs(const std::string filePath);
+	void loadTemplateFile();
 
 private:
-	void loadTemplateFile();
 	bool replaceTextBdata(const char* original_bdata, char* modified_bdata);
 	bool replaceImageBdata(const char* imagePath, const char* original_bdata, char* modified_btata, const char* type);
 

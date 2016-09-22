@@ -101,7 +101,7 @@ public:
         groupBox->setGeometry(QRect(200, 10, 351, 81));
         originalTextLabel = new QLabel(groupBox);
         originalTextLabel->setObjectName(QStringLiteral("originalTextLabel"));
-        originalTextLabel->setGeometry(QRect(10, 30, 54, 12));
+        originalTextLabel->setGeometry(QRect(10, 20, 331, 51));
         groupBox_2 = new QGroupBox(replaceCharTab);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
         groupBox_2->setGeometry(QRect(200, 100, 351, 221));
@@ -132,7 +132,7 @@ public:
         groupBox_3->setGeometry(QRect(200, 9, 341, 311));
         imagePreviewLabel = new QLabel(groupBox_3);
         imagePreviewLabel->setObjectName(QStringLiteral("imagePreviewLabel"));
-        imagePreviewLabel->setGeometry(QRect(10, 54, 371, 221));
+        imagePreviewLabel->setGeometry(QRect(10, 50, 321, 221));
         layoutWidget = new QWidget(groupBox_3);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
         layoutWidget->setGeometry(QRect(10, 22, 321, 22));

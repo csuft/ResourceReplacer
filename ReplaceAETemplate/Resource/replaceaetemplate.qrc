@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/images">
         <file alias="logo">Images/logo.png</file>
+        <file alias="placeholder">Images/placeholder.png</file>
     </qresource>
 </RCC>
