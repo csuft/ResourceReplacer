@@ -18,6 +18,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
@@ -25,8 +26,6 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
-#include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -38,36 +37,21 @@ public:
     QAction *actionCloseFile;
     QAction *actionQuitApplication;
     QAction *actionDeveloper;
+    QAction *actionSaveFile;
     QWidget *centralWidget;
-    QVBoxLayout *verticalLayout;
     QTabWidget *tabWidget;
     QWidget *replaceCharTab;
-    QVBoxLayout *verticalLayout_4;
+    QListWidget *textListWidget;
     QGroupBox *groupBox;
-    QVBoxLayout *verticalLayout_2;
-    QHBoxLayout *horizontalLayout;
-    QLabel *label;
-    QLineEdit *sourceCharLineEdit;
-    QPushButton *searchCharButton;
-    QHBoxLayout *horizontalLayout_2;
-    QLabel *label_2;
-    QLabel *searchCharResult;
-    QSpacerItem *horizontalSpacer;
-    QLabel *label_4;
+    QLabel *originalTextLabel;
     QGroupBox *groupBox_2;
-    QVBoxLayout *verticalLayout_3;
-    QHBoxLayout *horizontalLayout_3;
-    QLabel *label_5;
-    QLineEdit *destCharLineEdit;
-    QPushButton *replaceCharButton;
-    QHBoxLayout *horizontalLayout_4;
-    QLabel *label_6;
-    QLabel *replaceCharResult;
-    QLabel *label_8;
-    QSpacerItem *horizontalSpacer_2;
-    QLabel *label_9;
+    QLabel *label;
+    QLineEdit *newTextLineEdit;
+    QPushButton *replaceTextButton;
+    QLabel *label_2;
+    QLabel *label_4;
     QWidget *replaceImageTab;
-    QTreeWidget *imageTreeWidget;
+    QListWidget *imageListWidget;
     QGroupBox *groupBox_3;
     QLabel *imagePreviewLabel;
     QWidget *layoutWidget;
@@ -98,147 +82,51 @@ public:
         actionQuitApplication->setObjectName(QStringLiteral("actionQuitApplication"));
         actionDeveloper = new QAction(ReplaceAETemplateClass);
         actionDeveloper->setObjectName(QStringLiteral("actionDeveloper"));
+        actionSaveFile = new QAction(ReplaceAETemplateClass);
+        actionSaveFile->setObjectName(QStringLiteral("actionSaveFile"));
         centralWidget = new QWidget(ReplaceAETemplateClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        verticalLayout = new QVBoxLayout(centralWidget);
-        verticalLayout->setSpacing(6);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
+        tabWidget->setGeometry(QRect(9, 9, 591, 341));
         tabWidget->setTabPosition(QTabWidget::West);
         tabWidget->setTabShape(QTabWidget::Rounded);
         replaceCharTab = new QWidget();
         replaceCharTab->setObjectName(QStringLiteral("replaceCharTab"));
-        verticalLayout_4 = new QVBoxLayout(replaceCharTab);
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
+        textListWidget = new QListWidget(replaceCharTab);
+        textListWidget->setObjectName(QStringLiteral("textListWidget"));
+        textListWidget->setGeometry(QRect(9, 9, 181, 311));
         groupBox = new QGroupBox(replaceCharTab);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        verticalLayout_2 = new QVBoxLayout(groupBox);
-        verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        label = new QLabel(groupBox);
-        label->setObjectName(QStringLiteral("label"));
-
-        horizontalLayout->addWidget(label);
-
-        sourceCharLineEdit = new QLineEdit(groupBox);
-        sourceCharLineEdit->setObjectName(QStringLiteral("sourceCharLineEdit"));
-
-        horizontalLayout->addWidget(sourceCharLineEdit);
-
-        searchCharButton = new QPushButton(groupBox);
-        searchCharButton->setObjectName(QStringLiteral("searchCharButton"));
-
-        horizontalLayout->addWidget(searchCharButton);
-
-
-        verticalLayout_2->addLayout(horizontalLayout);
-
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        label_2 = new QLabel(groupBox);
-        label_2->setObjectName(QStringLiteral("label_2"));
-
-        horizontalLayout_2->addWidget(label_2);
-
-        searchCharResult = new QLabel(groupBox);
-        searchCharResult->setObjectName(QStringLiteral("searchCharResult"));
-
-        horizontalLayout_2->addWidget(searchCharResult);
-
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_2->addItem(horizontalSpacer);
-
-
-        verticalLayout_2->addLayout(horizontalLayout_2);
-
-        label_4 = new QLabel(groupBox);
-        label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setScaledContents(false);
-
-        verticalLayout_2->addWidget(label_4);
-
-
-        verticalLayout_4->addWidget(groupBox);
-
+        groupBox->setGeometry(QRect(200, 10, 351, 81));
+        originalTextLabel = new QLabel(groupBox);
+        originalTextLabel->setObjectName(QStringLiteral("originalTextLabel"));
+        originalTextLabel->setGeometry(QRect(10, 30, 54, 12));
         groupBox_2 = new QGroupBox(replaceCharTab);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
-        verticalLayout_3 = new QVBoxLayout(groupBox_2);
-        verticalLayout_3->setSpacing(6);
-        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        label_5 = new QLabel(groupBox_2);
-        label_5->setObjectName(QStringLiteral("label_5"));
-
-        horizontalLayout_3->addWidget(label_5);
-
-        destCharLineEdit = new QLineEdit(groupBox_2);
-        destCharLineEdit->setObjectName(QStringLiteral("destCharLineEdit"));
-
-        horizontalLayout_3->addWidget(destCharLineEdit);
-
-        replaceCharButton = new QPushButton(groupBox_2);
-        replaceCharButton->setObjectName(QStringLiteral("replaceCharButton"));
-
-        horizontalLayout_3->addWidget(replaceCharButton);
-
-
-        verticalLayout_3->addLayout(horizontalLayout_3);
-
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setSpacing(6);
-        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
-        label_6 = new QLabel(groupBox_2);
-        label_6->setObjectName(QStringLiteral("label_6"));
-
-        horizontalLayout_4->addWidget(label_6);
-
-        replaceCharResult = new QLabel(groupBox_2);
-        replaceCharResult->setObjectName(QStringLiteral("replaceCharResult"));
-
-        horizontalLayout_4->addWidget(replaceCharResult);
-
-        label_8 = new QLabel(groupBox_2);
-        label_8->setObjectName(QStringLiteral("label_8"));
-
-        horizontalLayout_4->addWidget(label_8);
-
-        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_4->addItem(horizontalSpacer_2);
-
-
-        verticalLayout_3->addLayout(horizontalLayout_4);
-
-        label_9 = new QLabel(groupBox_2);
-        label_9->setObjectName(QStringLiteral("label_9"));
-
-        verticalLayout_3->addWidget(label_9);
-
-
-        verticalLayout_4->addWidget(groupBox_2);
-
+        groupBox_2->setGeometry(QRect(200, 100, 351, 221));
+        label = new QLabel(groupBox_2);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(10, 30, 54, 12));
+        newTextLineEdit = new QLineEdit(groupBox_2);
+        newTextLineEdit->setObjectName(QStringLiteral("newTextLineEdit"));
+        newTextLineEdit->setGeometry(QRect(10, 50, 251, 21));
+        replaceTextButton = new QPushButton(groupBox_2);
+        replaceTextButton->setObjectName(QStringLiteral("replaceTextButton"));
+        replaceTextButton->setGeometry(QRect(270, 50, 75, 23));
+        label_2 = new QLabel(groupBox_2);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setGeometry(QRect(10, 90, 54, 12));
+        label_4 = new QLabel(groupBox_2);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setGeometry(QRect(10, 110, 331, 41));
+        label_4->setStyleSheet(QStringLiteral("font-weight: bold;"));
         tabWidget->addTab(replaceCharTab, QString());
         replaceImageTab = new QWidget();
         replaceImageTab->setObjectName(QStringLiteral("replaceImageTab"));
-        imageTreeWidget = new QTreeWidget(replaceImageTab);
-        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
-        __qtreewidgetitem->setText(0, QStringLiteral("1"));
-        imageTreeWidget->setHeaderItem(__qtreewidgetitem);
-        imageTreeWidget->setObjectName(QStringLiteral("imageTreeWidget"));
-        imageTreeWidget->setGeometry(QRect(9, 9, 181, 311));
+        imageListWidget = new QListWidget(replaceImageTab);
+        imageListWidget->setObjectName(QStringLiteral("imageListWidget"));
+        imageListWidget->setGeometry(QRect(9, 9, 181, 311));
         groupBox_3 = new QGroupBox(replaceImageTab);
         groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
         groupBox_3->setGeometry(QRect(200, 9, 341, 311));
@@ -292,9 +180,6 @@ public:
         horizontalLayout_5->addWidget(replaceImageButton);
 
         tabWidget->addTab(replaceImageTab, QString());
-
-        verticalLayout->addWidget(tabWidget);
-
         ReplaceAETemplateClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(ReplaceAETemplateClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -312,12 +197,13 @@ public:
         menuBar->addAction(menuAbout->menuAction());
         menuFile->addAction(actionOpenFile);
         menuFile->addAction(actionCloseFile);
+        menuFile->addAction(actionSaveFile);
         menuFile->addAction(actionQuitApplication);
         menuAbout->addAction(actionDeveloper);
 
         retranslateUi(ReplaceAETemplateClass);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(ReplaceAETemplateClass);
@@ -333,24 +219,21 @@ public:
         actionQuitApplication->setText(QApplication::translate("ReplaceAETemplateClass", "\351\200\200\345\207\272\347\250\213\345\272\217(&Q)", 0));
         actionQuitApplication->setShortcut(QApplication::translate("ReplaceAETemplateClass", "Ctrl+Q", 0));
         actionDeveloper->setText(QApplication::translate("ReplaceAETemplateClass", "\345\274\200\345\217\221\350\200\205(&D)", 0));
-        groupBox->setTitle(QApplication::translate("ReplaceAETemplateClass", "\346\237\245\346\211\276", 0));
-        label->setText(QApplication::translate("ReplaceAETemplateClass", "\345\260\206\350\246\201\346\233\277\346\215\242\347\232\204\345\255\227\347\254\246\344\270\262:", 0));
-        searchCharButton->setText(QApplication::translate("ReplaceAETemplateClass", "\345\274\200\345\247\213\346\237\245\346\211\276", 0));
-        label_2->setText(QApplication::translate("ReplaceAETemplateClass", "\346\237\245\346\211\276\347\273\223\346\236\234:", 0));
-        searchCharResult->setText(QApplication::translate("ReplaceAETemplateClass", "0", 0));
-        label_4->setText(QApplication::translate("ReplaceAETemplateClass", "\350\257\264\346\230\216\357\274\232\345\205\210\350\276\223\345\205\245\350\246\201\346\233\277\346\215\242\347\232\204\345\255\227\347\254\246\344\270\262\357\274\214\347\250\213\345\272\217\345\260\206\345\234\250\344\272\214\350\277\233\345\210\266\346\250\241\346\235\277\346\226\207\344\273\266\344\270\255\350\277\233\350\241\214\346\237\245\346\211\276\343\200\202\345\246\202\346\236\234\346\262\241\346\234\211\346\211\276\345\210\260\345\255\227\347\254\246\344\270\262\357\274\214\n"
-"\345\210\231\344\270\215\350\203\275\350\277\233\350\241\214\346\233\277\346\215\242\346\223\215\344\275\234\357\274\201", 0));
-        groupBox_2->setTitle(QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242", 0));
-        label_5->setText(QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\347\232\204\347\233\256\346\240\207\345\255\227\347\254\246\344\270\262:", 0));
-        replaceCharButton->setText(QApplication::translate("ReplaceAETemplateClass", "\345\274\200\345\247\213\346\233\277\346\215\242", 0));
-        label_6->setText(QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\347\273\223\346\236\234:", 0));
-        replaceCharResult->setText(QApplication::translate("ReplaceAETemplateClass", "0", 0));
-        label_8->setText(QApplication::translate("ReplaceAETemplateClass", "\346\235\241\345\256\214\346\210\220\346\233\277\346\215\242", 0));
-        label_9->setText(QApplication::translate("ReplaceAETemplateClass", "\350\257\264\346\230\216\357\274\232\346\233\277\346\215\242\345\220\216\345\215\263\345\217\257\346\211\223\345\274\200\346\250\241\346\235\277\350\277\233\350\241\214\346\237\245\347\234\213\343\200\202", 0));
+        actionSaveFile->setText(QApplication::translate("ReplaceAETemplateClass", "\344\277\235\345\255\230\346\226\207\344\273\266(&S)", 0));
+        actionSaveFile->setShortcut(QApplication::translate("ReplaceAETemplateClass", "Ctrl+S", 0));
+        groupBox->setTitle(QApplication::translate("ReplaceAETemplateClass", "\345\216\237\345\247\213\346\226\207\346\234\254", 0));
+        originalTextLabel->setText(QString());
+        groupBox_2->setTitle(QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\346\223\215\344\275\234", 0));
+        label->setText(QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\344\270\272\357\274\232", 0));
+        replaceTextButton->setText(QApplication::translate("ReplaceAETemplateClass", "\345\274\200\345\247\213\346\233\277\346\215\242", 0));
+        label_2->setText(QApplication::translate("ReplaceAETemplateClass", "\350\257\264\346\230\216\357\274\232", 0));
+        label_4->setText(QApplication::translate("ReplaceAETemplateClass", "\346\223\215\344\275\234\345\211\215\345\205\210\345\234\250\350\217\234\345\215\225\346\240\217\344\270\255\346\211\223\345\274\200\350\246\201\344\277\256\346\224\271\347\232\204\346\250\241\346\235\277\346\226\207\344\273\266\343\200\202\345\246\202\345\216\237\346\250\241\346\235\277\n"
+"\346\226\207\344\273\266\346\230\257aep\346\240\274\345\274\217\347\232\204\357\274\214\350\257\267\345\205\210\345\217\246\345\255\230\344\270\272aepx\346\240\274\345\274\217\345\206\215\344\275\277\347\224\250\346\234\254\347\250\213\345\272\217\n"
+"\346\211\223\345\274\200\346\223\215\344\275\234\343\200\202", 0));
         tabWidget->setTabText(tabWidget->indexOf(replaceCharTab), QApplication::translate("ReplaceAETemplateClass", "\346\250\241\346\235\277\346\226\207\345\255\227\346\233\277\346\215\242", 0));
         tabWidget->setTabToolTip(tabWidget->indexOf(replaceCharTab), QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\344\272\214\350\277\233\345\210\266\346\250\241\346\235\277\346\226\207\344\273\266\344\270\255\347\232\204\346\214\207\345\256\232\345\255\227\347\254\246\344\270\262", 0));
         groupBox_3->setTitle(QApplication::translate("ReplaceAETemplateClass", "\346\223\215\344\275\234\351\235\242\346\235\277", 0));
-        imagePreviewLabel->setText(QApplication::translate("ReplaceAETemplateClass", "TextLabel", 0));
+        imagePreviewLabel->setText(QString());
         label_3->setText(QApplication::translate("ReplaceAETemplateClass", "\345\233\276\347\211\207\351\242\204\350\247\210ID:", 0));
         imageCountLabel->setText(QApplication::translate("ReplaceAETemplateClass", "0", 0));
         chooseImageButton->setText(QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\346\210\220...", 0));

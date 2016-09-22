@@ -14,12 +14,12 @@ public:
 	ReplaceAETemplate(QWidget *parent = 0);
 	~ReplaceAETemplate();
 
-private slots:
-	void onSearchText();
+private slots: 
 	void onReplaceText();
 	void onOpenFile();
 	void onQuitApp();
 	void onCloseFile();
+	void onSaveFile();
 
 private:
 	Ui::ReplaceAETemplateClass ui;

@@ -8,25 +8,17 @@ ReplaceAETemplate::ReplaceAETemplate(QWidget *parent)
 	setWindowIcon(QIcon(":/images/logo"));
 	setFixedHeight(400);
 	setFixedWidth(600);
-
-	connect(ui.searchCharButton, SIGNAL(clicked()), this, SLOT(onSearchText()));
-	connect(ui.replaceCharButton, SIGNAL(clicked()), this, SLOT(onReplaceText()));
-
-
-
-	connect(ui.actionOpenFile, SIGNAL(clicked()), this, SLOT(onOpenFile()));
+	 
+	connect(ui.replaceTextButton, SIGNAL(clicked()), this, SLOT(onReplaceText()));
+	connect(ui.actionQuitApplication, SIGNAL(triggered()), this, SLOT(onQuitApp()));
+	connect(ui.actionOpenFile, SIGNAL(triggered()), this, SLOT(onOpenFile()));
+	connect(ui.actionSaveFile, SIGNAL(triggered()), this, SLOT(onSaveFile()));
 }
 
 ReplaceAETemplate::~ReplaceAETemplate()
 {
 
-}
-
-void ReplaceAETemplate::onSearchText()
-{
-
-
-}
+} 
 
 
 void ReplaceAETemplate::onReplaceText()
@@ -41,10 +33,15 @@ void ReplaceAETemplate::onOpenFile()
 
 void ReplaceAETemplate::onQuitApp()
 {
-	close();
+	QApplication::quit();
 }
 
 void ReplaceAETemplate::onCloseFile()
+{
+
+}
+
+void ReplaceAETemplate::onSaveFile()
 {
 
 }
