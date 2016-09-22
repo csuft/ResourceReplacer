@@ -30,7 +30,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="replaceCharTab">
      <attribute name="title">
@@ -211,7 +211,7 @@
         <item>
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>图片预览ID:</string>
+           <string>图片资源ID:</string>
           </property>
          </widget>
         </item>

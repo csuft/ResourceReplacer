@@ -27,14 +27,13 @@ QMap<QString, int> XMLParser::parseTemplateText()
 {
 	QMap<QString, int> textMap;
 	XMLNode* ItemNode = mFoldNode->FirstChildElement("Item");
-	int index = 0;
+	int index = 1;
 
 	while (ItemNode != nullptr)
 	{
 		XMLNode* LayrElement = ItemNode->FirstChildElement("Layr");
 		while (LayrElement != nullptr)
 		{
-			index++;
 			// Replace text in template project
 			XMLElement* stringElement = LayrElement->FirstChildElement("string");
 			if (stringElement)
@@ -45,6 +44,7 @@ QMap<QString, int> XMLParser::parseTemplateText()
 					textMap.insert(stringValue, index);
 				}				
 			} 
+			index++;
 			LayrElement = LayrElement->NextSiblingElement("Layr");
 		}
 		ItemNode = ItemNode->NextSiblingElement("Item");
@@ -57,14 +57,13 @@ QMap<QString, int> XMLParser::parseTemplateImage()
 {
 	QMap<QString, int> imageList;
 	XMLNode* ItemNode = mFoldNode->FirstChildElement("Item");
-	int index = 0;
+	int index = 1;
 
 	while (ItemNode != nullptr)
 	{
 		XMLElement* pinNode = ItemNode->FirstChildElement("Pin");
 		while (pinNode != nullptr)
 		{ 
-			index++;
 			XMLElement* Als2Node = pinNode->FirstChildElement("Als2");
 			if (Als2Node)
 			{
@@ -75,8 +74,10 @@ QMap<QString, int> XMLParser::parseTemplateImage()
 					imageList.insert(fullpath, index);
 				}
 			}
+			index++;
 			pinNode = pinNode->NextSiblingElement("Pin");
 		}
+
 		ItemNode = ItemNode->NextSiblingElement("Item");
 	}
 
@@ -85,10 +86,11 @@ QMap<QString, int> XMLParser::parseTemplateImage()
 
 bool XMLParser::replaceTemplateText(const std::string& newText, const int index)
 {
-	int count = 0;
+	bool result;
+	int count = 1;
 	XMLNode* ItemNode = mFoldNode->FirstChildElement("Item");
 	XMLNode* LayrElement = nullptr;
-	while (ItemNode != nullptr && count != index)
+	while (ItemNode != nullptr)
 	{
 		LayrElement = ItemNode->FirstChildElement("Layr");
 		while (LayrElement != nullptr && count != index)
@@ -96,7 +98,11 @@ bool XMLParser::replaceTemplateText(const std::string& newText, const int index)
 			++count;
 			LayrElement = LayrElement->NextSiblingElement("Layr");
 		}
-		
+		if (count == index)
+		{
+			break;
+		}
+		ItemNode = ItemNode->NextSiblingElement("Item");
 	}
 
 	if (LayrElement != nullptr)
@@ -105,6 +111,7 @@ bool XMLParser::replaceTemplateText(const std::string& newText, const int index)
 		XMLElement* stringElement = LayrElement->FirstChildElement("string");
 		if (stringElement)
 		{
+			const char* str = stringElement->GetText();
 			stringElement->SetText(newText.c_str());
 		}
 		XMLElement* tdgpNode = LayrElement->FirstChildElement("tdgp");
@@ -125,16 +132,16 @@ bool XMLParser::replaceTemplateText(const std::string& newText, const int index)
 							const char* tdb4AttributeValue = tdb4Node->Attribute("bdata");
 							int len = strlen(tdb4AttributeValue);
 							char* modified_attr = new char[len + 1];
-							bool result = replaceTextBdata(tdb4AttributeValue, modified_attr);
+							result = replaceTextBdata(tdb4AttributeValue, modified_attr);
 							if (!result)
 							{
 								XMLElement* exprNode = mXMLDocument->NewElement("expr");
 								exprNode->SetAttribute("bdata", "746578742e736f75726365546578743d6e616d6500");
 								tdbsNode->InsertEndChild(exprNode);
 								tdb4Node->SetAttribute("bdata", modified_attr);
-								return true;
 							}
 							delete[] modified_attr;
+							return true;
 						}
 					}
 				}
@@ -146,17 +153,22 @@ bool XMLParser::replaceTemplateText(const std::string& newText, const int index)
 
 bool XMLParser::replaceTemplateImage(const std::string& newImagePath, const int index)
 {
-	int count = 0;
+	int count = 1;
+	int flag = 0;
 	XMLNode* ItemNode = mFoldNode->FirstChildElement("Item");
 	XMLElement* pinNode = nullptr;
-	while (ItemNode != nullptr && count != index)
+	while (ItemNode != nullptr)
 	{
 		pinNode = ItemNode->FirstChildElement("Pin");
-		while (pinNode != nullptr && count != index)
+		if (pinNode != nullptr && count != index)
 		{
 			++count;
-			pinNode = pinNode->NextSiblingElement("Pin");
 		}
+		if (count == index)
+		{
+			break;
+		}
+
 		ItemNode = ItemNode->NextSiblingElement("Item");
 	}
 
@@ -169,9 +181,10 @@ bool XMLParser::replaceTemplateImage(const std::string& newImagePath, const int 
 			int len = strlen(sspcAttributeValue);
 			char* modified_attr = new char[len + 1];
 			bool result = replaceImageBdata(newImagePath.c_str(), sspcAttributeValue, modified_attr, "sspc");
-			if (!result)
+			if (result)
 			{
 				sspcNode->SetAttribute("bdata", modified_attr);
+				++flag;
 			}
 			delete[] modified_attr;
 		}
@@ -183,6 +196,7 @@ bool XMLParser::replaceTemplateImage(const std::string& newImagePath, const int 
 			if (fileReferenceNode)
 			{
 				fileReferenceNode->SetAttribute("fullpath", newImagePath.c_str()); 
+				++flag;
 			}
 		}
 
@@ -193,15 +207,16 @@ bool XMLParser::replaceTemplateImage(const std::string& newImagePath, const int 
 			int len = strlen(optiAttributeValue);
 			char* modified_attr = new char[len + 1];
 			bool result = replaceImageBdata(newImagePath.c_str(), optiAttributeValue, modified_attr, "opti");
-			if (!result)
+			if (result)
 			{
 				optiNode->SetAttribute("bdata", modified_attr);
-				return true;
+				++flag;
 			}
 			delete[] modified_attr;
 		}
 	}
-	return false;
+	
+	return flag == 3 ? true:false;
 }
 
 bool XMLParser::replaceTextBdata(const char* original_bdata, char* modified_bdata)
