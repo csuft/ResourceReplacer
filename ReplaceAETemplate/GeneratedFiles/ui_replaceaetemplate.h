@@ -101,7 +101,7 @@ public:
         groupBox->setGeometry(QRect(200, 10, 351, 81));
         originalTextLabel = new QLabel(groupBox);
         originalTextLabel->setObjectName(QStringLiteral("originalTextLabel"));
-        originalTextLabel->setGeometry(QRect(10, 30, 54, 12));
+        originalTextLabel->setGeometry(QRect(10, 20, 331, 51));
         groupBox_2 = new QGroupBox(replaceCharTab);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
         groupBox_2->setGeometry(QRect(200, 100, 351, 221));
@@ -132,7 +132,7 @@ public:
         groupBox_3->setGeometry(QRect(200, 9, 341, 311));
         imagePreviewLabel = new QLabel(groupBox_3);
         imagePreviewLabel->setObjectName(QStringLiteral("imagePreviewLabel"));
-        imagePreviewLabel->setGeometry(QRect(10, 54, 371, 221));
+        imagePreviewLabel->setGeometry(QRect(10, 50, 321, 221));
         layoutWidget = new QWidget(groupBox_3);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
         layoutWidget->setGeometry(QRect(10, 22, 321, 22));
@@ -203,7 +203,7 @@ public:
 
         retranslateUi(ReplaceAETemplateClass);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(ReplaceAETemplateClass);
@@ -234,7 +234,7 @@ public:
         tabWidget->setTabToolTip(tabWidget->indexOf(replaceCharTab), QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\344\272\214\350\277\233\345\210\266\346\250\241\346\235\277\346\226\207\344\273\266\344\270\255\347\232\204\346\214\207\345\256\232\345\255\227\347\254\246\344\270\262", 0));
         groupBox_3->setTitle(QApplication::translate("ReplaceAETemplateClass", "\346\223\215\344\275\234\351\235\242\346\235\277", 0));
         imagePreviewLabel->setText(QString());
-        label_3->setText(QApplication::translate("ReplaceAETemplateClass", "\345\233\276\347\211\207\351\242\204\350\247\210ID:", 0));
+        label_3->setText(QApplication::translate("ReplaceAETemplateClass", "\345\233\276\347\211\207\350\265\204\346\272\220ID:", 0));
         imageCountLabel->setText(QApplication::translate("ReplaceAETemplateClass", "0", 0));
         chooseImageButton->setText(QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\346\210\220...", 0));
         replaceImageButton->setText(QApplication::translate("ReplaceAETemplateClass", "\347\241\256\345\256\232", 0));
