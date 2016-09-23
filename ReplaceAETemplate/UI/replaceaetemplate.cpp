@@ -9,7 +9,7 @@ ReplaceAETemplate::ReplaceAETemplate(QWidget *parent)
 : QMainWindow(parent), m_parser(nullptr), m_selectedText(-1)
 {
 	ui.setupUi(this);
-	setWindowTitle(QStringLiteral("模板内容替换工具v1.0"));
+	setWindowTitle(QStringLiteral("AE模板内容替换工具v1.0"));
 	setWindowIcon(QIcon(":/images/logo"));
 	setFixedHeight(400);
 	setFixedWidth(600);
