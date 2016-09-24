@@ -11,7 +11,7 @@ class XMLParser
 {
 public: 
 	XMLParser() = default;
-	XMLParser(const std::string& file);
+	XMLParser(QByteArray& byteArray);
 	~XMLParser();
 
 	enum ItemType {
@@ -27,7 +27,7 @@ public:
 	bool replaceTemplateText(const std::string& newText, const int index);
 	bool replaceTemplateImage(const std::string& newImagePath, const int index);
 	XMLError saveAs(const std::string filePath);
-	void loadTemplateFile();
+	bool loadTemplateFile();
 
 private:
 	bool replaceTextBdata(const char* original_bdata, char* modified_bdata);

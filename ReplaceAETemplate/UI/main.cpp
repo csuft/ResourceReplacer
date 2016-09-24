@@ -7,13 +7,13 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 	int ret;
 
-	LoginWindow loginWin;
-	if (loginWin.exec() == QDialog::Accepted)
-	{
+	//LoginWindow loginWin;
+	//if (loginWin.exec() == QDialog::Accepted)
+	//{
 		ReplaceAETemplate w;
 		w.show();
 		ret = a.exec();
-	}
+	//}
 
 	return ret;
 }

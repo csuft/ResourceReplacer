@@ -52,8 +52,14 @@ void ReplaceAETemplate::onOpenFile()
 	if (!m_selectedFile.isEmpty())
 	{ 
 		m_dir->setText(QStringLiteral("当前打开文件：") + m_selectedFile);
-		m_parser = new XMLParser(m_selectedFile.toStdString());
-		m_parser->loadTemplateFile();
+		m_parser = new XMLParser(m_selectedFile.toLocal8Bit());
+		bool ret = m_parser->loadTemplateFile();
+		if (!ret)
+		{
+			QMessageBox::critical(this, QStringLiteral("错误提示"), QStringLiteral("打开文件失败"), QMessageBox::Ok);
+			return;
+		}
+		
 		m_parser->startParseTemplate();
 		QMap<QString, int> textMap = m_parser->getTextMap();
 		QMapIterator<QString, int> textIterator(textMap);

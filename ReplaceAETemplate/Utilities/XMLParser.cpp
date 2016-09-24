@@ -1,10 +1,10 @@
 #include "XMLParser.h"
 
 
-XMLParser::XMLParser(const std::string& file)
+XMLParser::XMLParser(QByteArray& byteArray)
 {
 	mXMLDocument = new XMLDocument();
-	mFilePath = file;
+	mFilePath = std::string(byteArray);
 }
 
 XMLParser::~XMLParser()
@@ -12,14 +12,20 @@ XMLParser::~XMLParser()
 	delete mXMLDocument;
 }
 
-void XMLParser::loadTemplateFile()
+bool XMLParser::loadTemplateFile()
 {
-	mXMLDocument->LoadFile(mFilePath.c_str());
+	XMLError error = mXMLDocument->LoadFile(mFilePath.c_str());
+	if (error != XML_SUCCESS)
+	{
+		return false;
+	}
 	mRootElement = mXMLDocument->RootElement();
 	if (mRootElement)
 	{
 		mFoldNode = mRootElement->FirstChildElement("Fold");
+		return true;
 	}
+	return false;
 }
  
 void XMLParser::startParseTemplate()
@@ -121,7 +127,7 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 			}
 			// 文本为空的层直接跳过不要
 			const char* layerStr = stringNode->GetText();
-			if (!strcmp(layerStr, "") || layerStr == nullptr)
+			if (layerStr == nullptr || !strcmp(layerStr, ""))
 			{
 				return;
 			}
@@ -153,7 +159,7 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 			}
 			const char* tdmnInnerBdata = tdmnInner->Attribute("bdata");
 			// 'ADBE Text Document'
-			if (tdmnInnerBdata == nullptr || strcmp("41444245205465787420446f63756d656e7400000000000000000000000000000000000000000000", tdmnOuterBdata))
+			if (tdmnInnerBdata == nullptr || strcmp("41444245205465787420446f63756d656e7400000000000000000000000000000000000000000000", tdmnInnerBdata))
 			{
 				return;
 			}
@@ -167,11 +173,11 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 				return;
 			}
 			XMLElement* tempItem = SfdrNode->FirstChildElement("Item");
-			if (tempItem == nullptr)
+			while (tempItem != nullptr)
 			{
-				return;
+				parseTemplateItem(tempItem, index);
+				tempItem = tempItem->NextSiblingElement("Item");
 			}
-			parseTemplateItem(tempItem, index);
 		}
 		else
 		{
