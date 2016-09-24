@@ -54,10 +54,11 @@ void ReplaceAETemplate::onOpenFile()
 		m_dir->setText(QStringLiteral("当前打开文件：") + m_selectedFile);
 		m_parser = new XMLParser(m_selectedFile.toStdString());
 		m_parser->loadTemplateFile();
-		QMap<QString, int> textList = m_parser->parseTemplateText();
-		QMapIterator<QString, int> textIterator(textList);
-		QMap<QString, int> imageList = m_parser->parseTemplateImage();
-		QMapIterator<QString, int> imageIterator(imageList);
+		m_parser->startParseTemplate();
+		QMap<QString, int> textMap = m_parser->getTextMap();
+		QMapIterator<QString, int> textIterator(textMap);
+		QMap<QString, int> imageMap = m_parser->getImageMap();
+		QMapIterator<QString, int> imageIterator(imageMap);
 		int index = 1;
 		while (textIterator.hasNext())
 		{

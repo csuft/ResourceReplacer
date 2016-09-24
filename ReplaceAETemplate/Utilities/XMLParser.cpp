@@ -22,66 +22,164 @@ void XMLParser::loadTemplateFile()
 	}
 }
  
-
-QMap<QString, int> XMLParser::parseTemplateText()
+void XMLParser::startParseTemplate()
 {
-	QMap<QString, int> textMap;
+	
 	XMLNode* ItemNode = mFoldNode->FirstChildElement("Item");
 	int index = 1;
 
 	while (ItemNode != nullptr)
 	{
-		XMLNode* LayrElement = ItemNode->FirstChildElement("Layr");
-		while (LayrElement != nullptr)
-		{
-			// Replace text in template project
-			XMLElement* stringElement = LayrElement->FirstChildElement("string");
-			if (stringElement)
-			{
-				const char* stringValue = stringElement->GetText();
-				if (stringValue != nullptr && strcmp(stringValue, ""))
-				{
-					textMap.insert(stringValue, index);
-				}				
-			} 
-			index++;
-			LayrElement = LayrElement->NextSiblingElement("Layr");
-		}
+		parseTemplateItem(ItemNode, index);
 		ItemNode = ItemNode->NextSiblingElement("Item");
 	}
-
-	return textMap;
+	 
 }
 
-QMap<QString, int> XMLParser::parseTemplateImage()
+// 判断Item的类型
+// 总共分成三类：文件夹(Folder)、文件(File)、层(Layer)
+XMLParser::ItemType XMLParser::whichType(const char* bdata)
 {
-	QMap<QString, int> imageList;
-	XMLNode* ItemNode = mFoldNode->FirstChildElement("Item");
-	int index = 1;
-
-	while (ItemNode != nullptr)
+	if (bdata == nullptr || !strcmp("", bdata))
 	{
-		XMLElement* pinNode = ItemNode->FirstChildElement("Pin");
-		while (pinNode != nullptr)
-		{ 
-			XMLElement* Als2Node = pinNode->FirstChildElement("Als2");
-			if (Als2Node)
+		return UNKNOWN_ITEM;
+	}
+	char fourcc[8] = { '\0' };
+	memcpy(fourcc, bdata, 4);
+
+	if (!strcmp("0004", fourcc))
+	{
+		return COMPOSITE_ITEM;
+	}
+	else if (!strcmp("0001", fourcc))
+	{
+		return FOLDER_ITEM;
+	}
+	else if (!strcmp("0007", fourcc))
+	{
+		return NORMAL_ITEM;
+	}
+	else
+	{
+		return UNKNOWN_ITEM;
+	}
+}
+
+// 根据Item的idta子元素的值，递归解析XML
+void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
+{
+	if (rootElement == nullptr)
+	{
+		return;
+	}
+	++index;
+	XMLElement* idtaNode = rootElement->FirstChildElement("idta");
+	if (idtaNode != nullptr)
+	{
+		const char* idatBdata = idtaNode->Attribute("bdata");
+		ItemType itemType = whichType(idatBdata);
+		if (itemType == NORMAL_ITEM)
+		{
+			XMLElement* pinNode = idtaNode->NextSiblingElement("Pin");
+			if (pinNode != nullptr)
 			{
-				XMLElement* fileReferenceNode = Als2Node->FirstChildElement("fileReference");
-				if (fileReferenceNode)
+				XMLElement* sspcNode = pinNode->FirstChildElement("sspc");
+				if (sspcNode == nullptr)
 				{
-					const char* fullpath = fileReferenceNode->Attribute("fullpath"); 
-					imageList.insert(fullpath, index);
+					return;
+				}
+				const char* sspcBdata = sspcNode->Attribute("bdata");
+				bool isNormalFormat = isImageFormat(sspcBdata);
+				if (isNormalFormat)
+				{
+					XMLElement* Als2Node = sspcNode->NextSiblingElement("Als2");
+					if (Als2Node == nullptr)
+					{
+						return;
+					}
+					XMLElement* fileReferenceNode = Als2Node->FirstChildElement("fileReference");
+					if (fileReferenceNode == nullptr)
+					{
+						return;
+					}
+					const char* fullPath = fileReferenceNode->Attribute("fullpath");
+					m_imageMap.insert(fullPath, index);
 				}
 			}
-			index++;
-			pinNode = pinNode->NextSiblingElement("Pin");
 		}
-
-		ItemNode = ItemNode->NextSiblingElement("Item");
+		else if (itemType == COMPOSITE_ITEM)
+		{
+			XMLElement* LayrNode = idtaNode->NextSiblingElement("Layr");
+			if (LayrNode == nullptr)
+			{
+				return;
+			}
+			XMLElement* stringNode = LayrNode->FirstChildElement("string");
+			if (stringNode == nullptr)
+			{
+				return;
+			}
+			// 文本为空的层直接跳过不要
+			const char* layerStr = stringNode->GetText();
+			if (!strcmp(layerStr, "") || layerStr == nullptr)
+			{
+				return;
+			}
+			XMLElement* tdgpOuter = stringNode->NextSiblingElement("tdgp");
+			if (tdgpOuter == nullptr)
+			{
+				return;
+			}
+			XMLElement* tdmnOuter = tdgpOuter->FirstChildElement("tdmn");
+			if (tdmnOuter == nullptr)
+			{
+				return;
+			}
+			const char* tdmnOuterBdata = tdmnOuter->Attribute("bdata");
+			// 'ADBE Text Properties'
+			if (tdmnOuterBdata == nullptr || strcmp("4144424520546578742050726f706572746965730000000000000000000000000000000000000000", tdmnOuterBdata))
+			{
+				return;
+			}
+			XMLElement* tdgpInner = tdmnOuter->NextSiblingElement("tdgp");
+			if (tdgpInner == nullptr)
+			{
+				return;
+			}
+			XMLElement* tdmnInner = tdgpInner->FirstChildElement("tdmn");
+			if (tdmnInner == nullptr)
+			{
+				return;
+			}
+			const char* tdmnInnerBdata = tdmnInner->Attribute("bdata");
+			// 'ADBE Text Document'
+			if (tdmnInnerBdata == nullptr || strcmp("41444245205465787420446f63756d656e7400000000000000000000000000000000000000000000", tdmnOuterBdata))
+			{
+				return;
+			}
+			m_textMap.insert(layerStr, index);
+		}
+		else if (itemType == FOLDER_ITEM)
+		{
+			XMLElement* SfdrNode = idtaNode->NextSiblingElement("Sfdr");
+			if (SfdrNode == nullptr)
+			{
+				return;
+			}
+			XMLElement* tempItem = SfdrNode->FirstChildElement("Item");
+			if (tempItem == nullptr)
+			{
+				return;
+			}
+			parseTemplateItem(tempItem, index);
+		}
+		else
+		{
+			return;
+		}
 	}
+	
 
-	return imageList;
 }
 
 bool XMLParser::replaceTemplateText(const std::string& newText, const int index)
@@ -250,6 +348,24 @@ bool XMLParser::replaceTextBdata(const char* original_bdata, char* modified_bdat
 	return false;
 }
 
+// 判断是否是常见图片格式
+bool XMLParser::isImageFormat(const char* bdata)
+{
+	if (bdata == nullptr || !strcmp(bdata, ""))
+	{
+		return false;
+	}
+	char fourcc[16] = { '\0' };
+	memcpy(fourcc, bdata + 44, 8);
+
+	// JPEG(JPG), PNG, BMP, TIF(TIFF)
+	if (!strcmp(fourcc, "706e6721") || !strcmp(fourcc, "4a504547") || !strcmp(fourcc, "5449465f") || !strcmp(fourcc, "424d5020"))
+	{
+		return true;
+	}
+	return false;
+}
+
 bool XMLParser::replaceImageBdata(const char* imagePath, const char* original_bdata, char* modified_bdata, const char* type)
 {
 	if (original_bdata == nullptr || modified_bdata == nullptr || imagePath == nullptr || type == nullptr)
@@ -294,7 +410,7 @@ bool XMLParser::replaceImageBdata(const char* imagePath, const char* original_bd
 	return true;
 }
 
-void XMLParser::saveAs(const std::string filePath)
+XMLError XMLParser::saveAs(const std::string filePath)
 {
-	mXMLDocument->SaveFile(filePath.c_str());
+	return mXMLDocument->SaveFile(filePath.c_str());
 }
