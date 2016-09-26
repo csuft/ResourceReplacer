@@ -20,12 +20,17 @@ public:
 		NORMAL_ITEM,
 		UNKNOWN_ITEM
 	};
+
+	enum ReplaceType {
+		REPLACE_TEXT,
+		REPLACE_IMAGE
+	};
 	 
 	void startParseTemplate();
 	const QMap<QString, int> getTextMap() const { return m_textMap; }
 	const QMap<QString, int> getImageMap() const { return m_imageMap; }
-	bool replaceTemplateText(const std::string& newText, const int index);
-	bool replaceTemplateImage(const std::string& newImagePath, const int index);
+	bool replaceTemplateText(const std::string& newText, int index);
+	bool replaceTemplateImage(const std::string& newImagePath, int index);
 	XMLError saveAs(const std::string filePath);
 	bool loadTemplateFile();
 
@@ -35,6 +40,7 @@ private:
 	void parseTemplateItem(XMLNode* rootElement, int& index);
 	bool isImageFormat(const char* bdata);
 	ItemType whichType(const char* bdata);
+	void doReplace(XMLNode* rootElement, const std::string& contents, int counter, int index, int type);
 
 private:
 	std::string mFilePath;

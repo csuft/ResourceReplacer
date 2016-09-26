@@ -30,7 +30,6 @@ bool XMLParser::loadTemplateFile()
  
 void XMLParser::startParseTemplate()
 {
-	
 	XMLNode* ItemNode = mFoldNode->FirstChildElement("Item");
 	int index = 1;
 
@@ -39,7 +38,6 @@ void XMLParser::startParseTemplate()
 		parseTemplateItem(ItemNode, index);
 		ItemNode = ItemNode->NextSiblingElement("Item");
 	}
-	 
 }
 
 // ÅÐ¶ÏItemµÄÀàÐÍ
@@ -79,6 +77,8 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 		return;
 	}
 	++index;
+	XMLElement* str = rootElement->FirstChildElement("string");
+	const char* txt = str->GetText();
 	XMLElement* idtaNode = rootElement->FirstChildElement("idta");
 	if (idtaNode != nullptr)
 	{
@@ -184,143 +184,40 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 			return;
 		}
 	}
-	
-
 }
 
-bool XMLParser::replaceTemplateText(const std::string& newText, const int index)
+bool XMLParser::replaceTemplateText(const std::string& newText, int index)
 {
-	bool result;
-	int count = 1;
 	XMLNode* ItemNode = mFoldNode->FirstChildElement("Item");
-	XMLNode* LayrElement = nullptr;
+	int counter = 1;
+
 	while (ItemNode != nullptr)
 	{
-		LayrElement = ItemNode->FirstChildElement("Layr");
-		while (LayrElement != nullptr && count != index)
-		{
-			++count;
-			LayrElement = LayrElement->NextSiblingElement("Layr");
-		}
-		if (count == index)
-		{
-			break;
-		}
+		doReplace(ItemNode, newText, counter, index, REPLACE_TEXT);
 		ItemNode = ItemNode->NextSiblingElement("Item");
 	}
-
-	if (LayrElement != nullptr)
-	{
-		// Replace text in template project
-		XMLElement* stringElement = LayrElement->FirstChildElement("string");
-		if (stringElement)
-		{
-			const char* str = stringElement->GetText();
-			stringElement->SetText(newText.c_str());
-		}
-		XMLElement* tdgpNode = LayrElement->FirstChildElement("tdgp");
-		if (tdgpNode)
-		{
-			XMLElement* tdgp1Node = tdgpNode->FirstChildElement("tdgp");
-			if (tdgp1Node)
-			{
-				XMLElement* btdsNode = tdgp1Node->FirstChildElement("btds");
-				if (btdsNode)
-				{
-					XMLElement* tdbsNode = btdsNode->FirstChildElement("tdbs");
-					if (tdbsNode)
-					{
-						XMLElement* tdb4Node = tdbsNode->FirstChildElement("tdb4");
-						if (tdb4Node)
-						{
-							const char* tdb4AttributeValue = tdb4Node->Attribute("bdata");
-							int len = strlen(tdb4AttributeValue);
-							char* modified_attr = new char[len + 1];
-							result = replaceTextBdata(tdb4AttributeValue, modified_attr);
-							if (!result)
-							{
-								XMLElement* exprNode = mXMLDocument->NewElement("expr");
-								exprNode->SetAttribute("bdata", "746578742e736f75726365546578743d6e616d6500");
-								tdbsNode->InsertEndChild(exprNode);
-								tdb4Node->SetAttribute("bdata", modified_attr);
-							}
-							delete[] modified_attr;
-							return true;
-						}
-					}
-				}
-			}
-		} 
-	} 
-	return false;
+	return true;
 }
 
 bool XMLParser::replaceTemplateImage(const std::string& newImagePath, const int index)
 {
-	int count = 1;
-	int flag = 0;
+	if (index < 0)
+	{
+		return false;
+	}
 	XMLNode* ItemNode = mFoldNode->FirstChildElement("Item");
-	XMLElement* pinNode = nullptr;
+	int counter = 1;
+
 	while (ItemNode != nullptr)
 	{
-		pinNode = ItemNode->FirstChildElement("Pin");
-		if (pinNode != nullptr && count != index)
-		{
-			++count;
-		}
-		if (count == index)
+		doReplace(ItemNode, newImagePath, counter, index, REPLACE_IMAGE);
+		if (counter == index)
 		{
 			break;
 		}
-
 		ItemNode = ItemNode->NextSiblingElement("Item");
 	}
-
-	if (pinNode != nullptr)
-	{
-		XMLElement* sspcNode = pinNode->FirstChildElement("sspc");
-		if (sspcNode)
-		{
-			const char* sspcAttributeValue = sspcNode->Attribute("bdata");  
-			int len = strlen(sspcAttributeValue);
-			char* modified_attr = new char[len + 1];
-			bool result = replaceImageBdata(newImagePath.c_str(), sspcAttributeValue, modified_attr, "sspc");
-			if (result)
-			{
-				sspcNode->SetAttribute("bdata", modified_attr);
-				++flag;
-			}
-			delete[] modified_attr;
-		}
-
-		XMLElement* Als2Node = pinNode->FirstChildElement("Als2");
-		if (Als2Node)
-		{
-			XMLElement* fileReferenceNode = Als2Node->FirstChildElement("fileReference");
-			if (fileReferenceNode)
-			{
-				fileReferenceNode->SetAttribute("fullpath", newImagePath.c_str()); 
-				++flag;
-			}
-		}
-
-		XMLElement* optiNode = pinNode->FirstChildElement("opti");
-		if (optiNode)
-		{
-			const char* optiAttributeValue = optiNode->Attribute("bdata");
-			int len = strlen(optiAttributeValue);
-			char* modified_attr = new char[len + 1];
-			bool result = replaceImageBdata(newImagePath.c_str(), optiAttributeValue, modified_attr, "opti");
-			if (result)
-			{
-				optiNode->SetAttribute("bdata", modified_attr);
-				++flag;
-			}
-			delete[] modified_attr;
-		}
-	}
-	
-	return flag == 3 ? true:false;
+	return true;
 }
 
 bool XMLParser::replaceTextBdata(const char* original_bdata, char* modified_bdata)
@@ -419,4 +316,136 @@ bool XMLParser::replaceImageBdata(const char* imagePath, const char* original_bd
 XMLError XMLParser::saveAs(const std::string filePath)
 {
 	return mXMLDocument->SaveFile(filePath.c_str());
+}
+
+void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int counter, int index, int type)
+{
+	if (rootElement == nullptr)
+	{
+		return;
+	}
+	++counter;
+	XMLElement* idtaNode = rootElement->FirstChildElement("idta");
+	if (idtaNode != nullptr)
+	{
+		const char* idatBdata = idtaNode->Attribute("bdata");
+		ItemType itemType = whichType(idatBdata);
+		if (itemType == NORMAL_ITEM && type == REPLACE_IMAGE)
+		{
+			if (counter == index)  // We found it!
+			{
+				XMLElement* pinNode = idtaNode->NextSiblingElement("Pin");
+				if (pinNode != nullptr)
+				{
+					XMLElement* sspcNode = pinNode->FirstChildElement("sspc");
+					if (sspcNode)
+					{
+						const char* sspcBdata = sspcNode->Attribute("bdata");
+						int len = strlen(sspcBdata);
+						char* modified_attr = new char[len + 1];
+						bool result = replaceImageBdata(contents.c_str(), sspcBdata, modified_attr, "sspc");
+						if (result)
+						{
+							sspcNode->SetAttribute("bdata", modified_attr);
+						}
+						delete[] modified_attr;
+					}
+					
+					XMLElement* Als2Node = pinNode->FirstChildElement("Als2");
+					if (Als2Node)
+					{
+						XMLElement* fileReferenceNode = Als2Node->FirstChildElement("fileReference");
+						if (fileReferenceNode)
+						{
+							fileReferenceNode->SetAttribute("fullpath", contents.c_str());
+						}
+					}
+
+					XMLElement* optiNode = pinNode->FirstChildElement("opti");
+					if (optiNode)
+					{
+						const char* optiAttributeValue = optiNode->Attribute("bdata");
+						int len = strlen(optiAttributeValue);
+						char* modified_attr = new char[len + 1];
+						bool result = replaceImageBdata(contents.c_str(), optiAttributeValue, modified_attr, "opti");
+						if (result)
+						{
+							optiNode->SetAttribute("bdata", modified_attr);
+						}
+						delete[] modified_attr;
+					} 
+				}
+			}
+			
+		}
+		else if (itemType == COMPOSITE_ITEM && type == REPLACE_TEXT)
+		{
+			if (counter == index)  // We found the text!
+			{
+				XMLElement* LayrNode = idtaNode->NextSiblingElement("Layr");
+				if (LayrNode == nullptr)
+				{
+					return;
+				}
+				XMLElement* stringNode = LayrNode->FirstChildElement("string");
+				if (stringNode == nullptr)
+				{
+					return;
+				}
+				
+				stringNode->SetText(contents.c_str());
+				XMLElement* tdgpOuter = stringNode->NextSiblingElement("tdgp");
+				if (tdgpOuter == nullptr)
+				{
+					return;
+				}
+				XMLElement* tdmnOuter = tdgpOuter->FirstChildElement("tdmn");
+				if (tdmnOuter == nullptr)
+				{
+					return;
+				}
+				const char* tdmnOuterBdata = tdmnOuter->Attribute("bdata");
+				// 'ADBE Text Properties'
+				if (tdmnOuterBdata == nullptr || strcmp("4144424520546578742050726f706572746965730000000000000000000000000000000000000000", tdmnOuterBdata))
+				{
+					return;
+				}
+				XMLElement* tdgpInner = tdmnOuter->NextSiblingElement("tdgp");
+				if (tdgpInner == nullptr)
+				{
+					return;
+				}
+				XMLElement* tdmnInner = tdgpInner->FirstChildElement("tdmn");
+				if (tdmnInner == nullptr)
+				{
+					return;
+				}
+				const char* tdmnInnerBdata = tdmnInner->Attribute("bdata");
+				// 'ADBE Text Document'
+				if (tdmnInnerBdata == nullptr || strcmp("41444245205465787420446f63756d656e7400000000000000000000000000000000000000000000", tdmnInnerBdata))
+				{
+					return;
+				}
+
+			}
+		}
+		else if (itemType == FOLDER_ITEM)
+		{
+			XMLElement* SfdrNode = idtaNode->NextSiblingElement("Sfdr");
+			if (SfdrNode == nullptr)
+			{
+				return;
+			}
+			XMLElement* tempItem = SfdrNode->FirstChildElement("Item");
+			while (tempItem != nullptr)
+			{
+				parseTemplateItem(tempItem, index);
+				tempItem = tempItem->NextSiblingElement("Item");
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
 }
