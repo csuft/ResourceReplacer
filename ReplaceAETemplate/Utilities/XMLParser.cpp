@@ -109,7 +109,7 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 						return;
 					}
 					const char* fullPath = fileReferenceNode->Attribute("fullpath");
-					m_imageMap.insert(fullPath, index);
+					m_imageMap.insertMulti(fullPath, index);
 					index++;
 				}
 			}
@@ -146,7 +146,7 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 											// 'ADBE Text Document'
 											if (tdmnInnerBdata != nullptr || !strcmp("41444245205465787420446f63756d656e7400000000000000000000000000000000000000000000", tdmnInnerBdata))
 											{
-												m_textMap.insert(layerStr, index);
+												m_textMap.insertMulti(layerStr, index);
 												index++;
 											}
 										}
@@ -480,7 +480,7 @@ void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int
 			XMLElement* tempItem = SfdrNode->FirstChildElement("Item");
 			while (tempItem != nullptr)
 			{
-				parseTemplateItem(tempItem, index);
+				doReplace(tempItem, contents, counter, index, type);
 				tempItem = tempItem->NextSiblingElement("Item");
 			}
 		}
