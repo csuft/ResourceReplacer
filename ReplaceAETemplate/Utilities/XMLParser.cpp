@@ -76,7 +76,7 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 	{
 		return;
 	}
-	++index;
+
 	XMLElement* str = rootElement->FirstChildElement("string");
 	const char* txt = str->GetText();
 	XMLElement* idtaNode = rootElement->FirstChildElement("idta");
@@ -110,60 +110,54 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 					}
 					const char* fullPath = fileReferenceNode->Attribute("fullpath");
 					m_imageMap.insert(fullPath, index);
+					index++;
 				}
 			}
 		}
 		else if (itemType == COMPOSITE_ITEM)
 		{
 			XMLElement* LayrNode = idtaNode->NextSiblingElement("Layr");
-			if (LayrNode == nullptr)
+			while (LayrNode != nullptr)
 			{
-				return;
+				XMLElement* stringNode = LayrNode->FirstChildElement("string");
+				if (stringNode)
+				{
+					// 文本为空的层直接跳过不要
+					const char* layerStr = stringNode->GetText();
+					if (layerStr != nullptr && strcmp(layerStr, ""))
+					{
+						XMLElement* tdgpOuter = stringNode->NextSiblingElement("tdgp");
+						if (tdgpOuter)
+						{
+							XMLElement* tdmnOuter = tdgpOuter->FirstChildElement("tdmn");
+							if (tdmnOuter)
+							{
+								const char* tdmnOuterBdata = tdmnOuter->Attribute("bdata");
+								// 'ADBE Text Properties'
+								if (tdmnOuterBdata != nullptr && !strcmp("4144424520546578742050726f706572746965730000000000000000000000000000000000000000", tdmnOuterBdata))
+								{
+									XMLElement* tdgpInner = tdmnOuter->NextSiblingElement("tdgp");
+									if (tdgpInner != nullptr)
+									{
+										XMLElement* tdmnInner = tdgpInner->FirstChildElement("tdmn");
+										if (tdmnInner != nullptr)
+										{
+											const char* tdmnInnerBdata = tdmnInner->Attribute("bdata");
+											// 'ADBE Text Document'
+											if (tdmnInnerBdata != nullptr || !strcmp("41444245205465787420446f63756d656e7400000000000000000000000000000000000000000000", tdmnInnerBdata))
+											{
+												m_textMap.insert(layerStr, index);
+												index++;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				LayrNode = LayrNode->NextSiblingElement("Layr");
 			}
-			XMLElement* stringNode = LayrNode->FirstChildElement("string");
-			if (stringNode == nullptr)
-			{
-				return;
-			}
-			// 文本为空的层直接跳过不要
-			const char* layerStr = stringNode->GetText();
-			if (layerStr == nullptr || !strcmp(layerStr, ""))
-			{
-				return;
-			}
-			XMLElement* tdgpOuter = stringNode->NextSiblingElement("tdgp");
-			if (tdgpOuter == nullptr)
-			{
-				return;
-			}
-			XMLElement* tdmnOuter = tdgpOuter->FirstChildElement("tdmn");
-			if (tdmnOuter == nullptr)
-			{
-				return;
-			}
-			const char* tdmnOuterBdata = tdmnOuter->Attribute("bdata");
-			// 'ADBE Text Properties'
-			if (tdmnOuterBdata == nullptr || strcmp("4144424520546578742050726f706572746965730000000000000000000000000000000000000000", tdmnOuterBdata))
-			{
-				return;
-			}
-			XMLElement* tdgpInner = tdmnOuter->NextSiblingElement("tdgp");
-			if (tdgpInner == nullptr)
-			{
-				return;
-			}
-			XMLElement* tdmnInner = tdgpInner->FirstChildElement("tdmn");
-			if (tdmnInner == nullptr)
-			{
-				return;
-			}
-			const char* tdmnInnerBdata = tdmnInner->Attribute("bdata");
-			// 'ADBE Text Document'
-			if (tdmnInnerBdata == nullptr || strcmp("41444245205465787420446f63756d656e7400000000000000000000000000000000000000000000", tdmnInnerBdata))
-			{
-				return;
-			}
-			m_textMap.insert(layerStr, index);
 		}
 		else if (itemType == FOLDER_ITEM)
 		{
@@ -313,9 +307,9 @@ bool XMLParser::replaceImageBdata(const char* imagePath, const char* original_bd
 	return true;
 }
 
-XMLError XMLParser::saveAs(const std::string filePath)
+XMLError XMLParser::saveAs(QByteArray& filePath)
 {
-	return mXMLDocument->SaveFile(filePath.c_str());
+	return mXMLDocument->SaveFile(std::string(filePath).c_str());
 }
 
 void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int counter, int index, int type)

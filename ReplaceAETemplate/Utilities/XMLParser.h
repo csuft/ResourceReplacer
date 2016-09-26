@@ -31,7 +31,7 @@ public:
 	const QMap<QString, int> getImageMap() const { return m_imageMap; }
 	bool replaceTemplateText(const std::string& newText, int index);
 	bool replaceTemplateImage(const std::string& newImagePath, int index);
-	XMLError saveAs(const std::string filePath);
+	XMLError saveAs(QByteArray& filePath);
 	bool loadTemplateFile();
 
 private:

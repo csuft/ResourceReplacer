@@ -124,8 +124,15 @@ void ReplaceAETemplate::onSaveFile()
 	{
 		QFileInfo fileInfo(m_selectedFile);
 		QString generatedFile = fileInfo.path() + "generated.aepx";
-		m_parser->saveAs(generatedFile.toStdString());
-		QMessageBox::information(this, QStringLiteral("文件已保存"), generatedFile, QMessageBox::Ok);
+		XMLError ret = m_parser->saveAs(generatedFile.toLocal8Bit());
+		if (ret == XML_SUCCESS)
+		{
+			QMessageBox::information(this, QStringLiteral("文件已保存"), generatedFile, QMessageBox::Ok);
+		}
+		else
+		{
+			QMessageBox::warning(this, QStringLiteral("文件保存失败"), QStringLiteral("保存文件出错，请重新尝试！"), QMessageBox::Ok);
+		}
 	}
 }
 
