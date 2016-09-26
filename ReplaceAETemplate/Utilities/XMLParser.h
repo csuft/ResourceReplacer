@@ -40,7 +40,7 @@ private:
 	void parseTemplateItem(XMLNode* rootElement, int& index);
 	bool isImageFormat(const char* bdata);
 	ItemType whichType(const char* bdata);
-	void doReplace(XMLNode* rootElement, const std::string& contents, int counter, int index, int type);
+	void doReplace(XMLNode* rootElement, const std::string& contents, int& counter, int index, int type);
 
 private:
 	std::string mFilePath;

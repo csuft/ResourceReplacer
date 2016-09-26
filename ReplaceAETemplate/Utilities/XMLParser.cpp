@@ -182,12 +182,20 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 
 bool XMLParser::replaceTemplateText(const std::string& newText, int index)
 {
+	if (index < 0)
+	{
+		return false;
+	}
 	XMLNode* ItemNode = mFoldNode->FirstChildElement("Item");
 	int counter = 1;
 
 	while (ItemNode != nullptr)
 	{
 		doReplace(ItemNode, newText, counter, index, REPLACE_TEXT);
+		if (counter == index)
+		{
+			break;
+		}
 		ItemNode = ItemNode->NextSiblingElement("Item");
 	}
 	return true;
@@ -312,115 +320,154 @@ XMLError XMLParser::saveAs(QByteArray& filePath)
 	return mXMLDocument->SaveFile(std::string(filePath).c_str());
 }
 
-void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int counter, int index, int type)
+void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int& counter, int index, int type)
 {
 	if (rootElement == nullptr)
 	{
 		return;
 	}
-	++counter;
+
+	XMLElement* str = rootElement->FirstChildElement("string");
+	const char* txt = str->GetText();
 	XMLElement* idtaNode = rootElement->FirstChildElement("idta");
 	if (idtaNode != nullptr)
 	{
 		const char* idatBdata = idtaNode->Attribute("bdata");
 		ItemType itemType = whichType(idatBdata);
-		if (itemType == NORMAL_ITEM && type == REPLACE_IMAGE)
+		if (itemType == NORMAL_ITEM)
 		{
-			if (counter == index)  // We found it!
+			XMLElement* pinNode = idtaNode->NextSiblingElement("Pin");
+			if (pinNode != nullptr)
 			{
-				XMLElement* pinNode = idtaNode->NextSiblingElement("Pin");
-				if (pinNode != nullptr)
+				XMLElement* sspcNode = pinNode->FirstChildElement("sspc");
+				if (sspcNode != nullptr)
 				{
-					XMLElement* sspcNode = pinNode->FirstChildElement("sspc");
-					if (sspcNode)
+					const char* sspcBdata = sspcNode->Attribute("bdata");
+					bool isNormalFormat = isImageFormat(sspcBdata);
+					if (isNormalFormat)
 					{
-						const char* sspcBdata = sspcNode->Attribute("bdata");
-						int len = strlen(sspcBdata);
-						char* modified_attr = new char[len + 1];
-						bool result = replaceImageBdata(contents.c_str(), sspcBdata, modified_attr, "sspc");
-						if (result)
+						XMLElement* Als2Node = sspcNode->NextSiblingElement("Als2");
+						if (Als2Node != nullptr)
 						{
-							sspcNode->SetAttribute("bdata", modified_attr);
-						}
-						delete[] modified_attr;
-					}
-					
-					XMLElement* Als2Node = pinNode->FirstChildElement("Als2");
-					if (Als2Node)
-					{
-						XMLElement* fileReferenceNode = Als2Node->FirstChildElement("fileReference");
-						if (fileReferenceNode)
-						{
-							fileReferenceNode->SetAttribute("fullpath", contents.c_str());
-						}
-					}
+							XMLElement* fileReferenceNode = Als2Node->FirstChildElement("fileReference");
+							if (fileReferenceNode != nullptr)
+							{
+								if (counter == index && type == REPLACE_IMAGE)
+								{
+									int bDataLength;
+									char* buffer;
+									bool result;
+									// PART 1
+									bDataLength = strlen(sspcBdata);
+									buffer = new char[bDataLength + 1];
+									result = replaceImageBdata(contents.c_str(), sspcBdata, buffer, "sspc");
+									if (result)
+									{
+										sspcNode->SetAttribute("bdata", buffer);
+									}
+									delete[] buffer;
 
-					XMLElement* optiNode = pinNode->FirstChildElement("opti");
-					if (optiNode)
-					{
-						const char* optiAttributeValue = optiNode->Attribute("bdata");
-						int len = strlen(optiAttributeValue);
-						char* modified_attr = new char[len + 1];
-						bool result = replaceImageBdata(contents.c_str(), optiAttributeValue, modified_attr, "opti");
-						if (result)
-						{
-							optiNode->SetAttribute("bdata", modified_attr);
+									// PART 2
+									fileReferenceNode->SetAttribute("fullpath", contents.c_str());
+
+									// PART 3
+									XMLElement* optiNode = pinNode->FirstChildElement("opti");
+									if (optiNode)
+									{
+										const char* optiBdata = optiNode->Attribute("bdata");
+										bDataLength = strlen(optiBdata);
+										buffer = new char[bDataLength + 1];
+										result = replaceImageBdata(contents.c_str(), optiBdata, buffer, "opti");
+										if (result)
+										{
+											optiNode->SetAttribute("bdata", buffer);
+										}
+										delete[] buffer;
+										return;
+									} 
+								}
+								++counter;
+							}
 						}
-						delete[] modified_attr;
-					} 
-				}
+					}
+				} 
 			}
-			
 		}
-		else if (itemType == COMPOSITE_ITEM && type == REPLACE_TEXT)
+		else if (itemType == COMPOSITE_ITEM)
 		{
-			if (counter == index)  // We found the text!
+			XMLElement* LayrNode = idtaNode->NextSiblingElement("Layr");
+			while (LayrNode != nullptr)
 			{
-				XMLElement* LayrNode = idtaNode->NextSiblingElement("Layr");
-				if (LayrNode == nullptr)
-				{
-					return;
-				}
 				XMLElement* stringNode = LayrNode->FirstChildElement("string");
-				if (stringNode == nullptr)
+				if (stringNode)
 				{
-					return;
-				}
-				
-				stringNode->SetText(contents.c_str());
-				XMLElement* tdgpOuter = stringNode->NextSiblingElement("tdgp");
-				if (tdgpOuter == nullptr)
-				{
-					return;
-				}
-				XMLElement* tdmnOuter = tdgpOuter->FirstChildElement("tdmn");
-				if (tdmnOuter == nullptr)
-				{
-					return;
-				}
-				const char* tdmnOuterBdata = tdmnOuter->Attribute("bdata");
-				// 'ADBE Text Properties'
-				if (tdmnOuterBdata == nullptr || strcmp("4144424520546578742050726f706572746965730000000000000000000000000000000000000000", tdmnOuterBdata))
-				{
-					return;
-				}
-				XMLElement* tdgpInner = tdmnOuter->NextSiblingElement("tdgp");
-				if (tdgpInner == nullptr)
-				{
-					return;
-				}
-				XMLElement* tdmnInner = tdgpInner->FirstChildElement("tdmn");
-				if (tdmnInner == nullptr)
-				{
-					return;
-				}
-				const char* tdmnInnerBdata = tdmnInner->Attribute("bdata");
-				// 'ADBE Text Document'
-				if (tdmnInnerBdata == nullptr || strcmp("41444245205465787420446f63756d656e7400000000000000000000000000000000000000000000", tdmnInnerBdata))
-				{
-					return;
-				}
+					// 文本为空的层直接跳过不要
+					const char* layerStr = stringNode->GetText();
+					if (layerStr != nullptr && strcmp(layerStr, ""))
+					{
+						XMLElement* tdgpOuter = stringNode->NextSiblingElement("tdgp");
+						if (tdgpOuter)
+						{
+							XMLElement* tdmnOuter = tdgpOuter->FirstChildElement("tdmn");
+							if (tdmnOuter)
+							{
+								const char* tdmnOuterBdata = tdmnOuter->Attribute("bdata");
+								// 'ADBE Text Properties'
+								if (tdmnOuterBdata != nullptr && !strcmp("4144424520546578742050726f706572746965730000000000000000000000000000000000000000", tdmnOuterBdata))
+								{
+									XMLElement* tdgpInner = tdmnOuter->NextSiblingElement("tdgp");
+									if (tdgpInner != nullptr)
+									{
+										XMLElement* tdmnInner = tdgpInner->FirstChildElement("tdmn");
+										if (tdmnInner != nullptr)
+										{
+											const char* tdmnInnerBdata = tdmnInner->Attribute("bdata");
+											// 'ADBE Text Document'
+											if (tdmnInnerBdata != nullptr || !strcmp("41444245205465787420446f63756d656e7400000000000000000000000000000000000000000000", tdmnInnerBdata))
+											{ 
+												if (counter == index && type == REPLACE_TEXT)
+												{
+													// PART 1
+													stringNode->SetText(contents.c_str());
 
+													// PART 2
+													XMLElement* btdsNode = tdmnInner->NextSiblingElement("btds");
+													if (btdsNode)
+													{
+														XMLElement* tdbsNode = btdsNode->FirstChildElement("tdbs");
+														if (tdbsNode)
+														{
+															XMLElement* tdb4Node = tdbsNode->FirstChildElement("tdb4");
+															if (tdb4Node)
+															{
+																const char* tdb4Bdata = tdb4Node->Attribute("bdata");
+																int len = strlen(tdb4Bdata);
+																char* buffer = new char[len + 1];
+																bool result = replaceTextBdata(tdb4Bdata, buffer);
+																if (!result)
+																{
+																	XMLElement* exprNode = mXMLDocument->NewElement("expr");
+																	// text.sourceText=name
+																	exprNode->SetAttribute("bdata", "746578742e736f75726365546578743d6e616d6500");
+																	tdbsNode->InsertEndChild(exprNode);
+																	tdb4Node->SetAttribute("bdata", buffer);
+																}
+																delete[] buffer;
+																return;
+															}
+														}
+													} 
+												}
+												counter++;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				LayrNode = LayrNode->NextSiblingElement("Layr");
 			}
 		}
 		else if (itemType == FOLDER_ITEM)
@@ -441,5 +488,5 @@ void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int
 		{
 			return;
 		}
-	}
+	} 
 }

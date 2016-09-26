@@ -112,9 +112,10 @@ void ReplaceAETemplate::onCloseFile()
 	ui.newTextLineEdit->setDisabled(true);
 	ui.actionCloseFile->setDisabled(true);
 	ui.actionSaveFile->setDisabled(true);
-	
+	ui.originalTextLabel->clear();
 	m_selectedImage.clear();
 	m_selectedText.clear();
+	m_selectedFile.clear();
 	m_selectedTextIndex = -1;
 }
 
@@ -123,7 +124,7 @@ void ReplaceAETemplate::onSaveFile()
 	if (m_parser != nullptr)
 	{
 		QFileInfo fileInfo(m_selectedFile);
-		QString generatedFile = fileInfo.path() + "generated.aepx";
+		QString generatedFile = fileInfo.path() + "/generated.aepx";
 		XMLError ret = m_parser->saveAs(generatedFile.toLocal8Bit());
 		if (ret == XML_SUCCESS)
 		{
