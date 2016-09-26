@@ -52,12 +52,19 @@ void ReplaceAETemplate::onOpenFile()
 	if (!m_selectedFile.isEmpty())
 	{ 
 		m_dir->setText(QStringLiteral("当前打开文件：") + m_selectedFile);
-		m_parser = new XMLParser(m_selectedFile.toStdString());
-		m_parser->loadTemplateFile();
-		QMap<QString, int> textList = m_parser->parseTemplateText();
-		QMapIterator<QString, int> textIterator(textList);
-		QMap<QString, int> imageList = m_parser->parseTemplateImage();
-		QMapIterator<QString, int> imageIterator(imageList);
+		m_parser = new XMLParser(m_selectedFile.toLocal8Bit());
+		bool ret = m_parser->loadTemplateFile();
+		if (!ret)
+		{
+			QMessageBox::critical(this, QStringLiteral("错误提示"), QStringLiteral("打开文件失败"), QMessageBox::Ok);
+			return;
+		}
+		
+		m_parser->startParseTemplate();
+		QMap<QString, int> textMap = m_parser->getTextMap();
+		QMapIterator<QString, int> textIterator(textMap);
+		QMap<QString, int> imageMap = m_parser->getImageMap();
+		QMapIterator<QString, int> imageIterator(imageMap);
 		int index = 1;
 		while (textIterator.hasNext())
 		{
@@ -105,9 +112,10 @@ void ReplaceAETemplate::onCloseFile()
 	ui.newTextLineEdit->setDisabled(true);
 	ui.actionCloseFile->setDisabled(true);
 	ui.actionSaveFile->setDisabled(true);
-	
+	ui.originalTextLabel->clear();
 	m_selectedImage.clear();
 	m_selectedText.clear();
+	m_selectedFile.clear();
 	m_selectedTextIndex = -1;
 }
 
@@ -116,9 +124,16 @@ void ReplaceAETemplate::onSaveFile()
 	if (m_parser != nullptr)
 	{
 		QFileInfo fileInfo(m_selectedFile);
-		QString generatedFile = fileInfo.path() + "generated.aepx";
-		m_parser->saveAs(generatedFile.toStdString());
-		QMessageBox::information(this, QStringLiteral("文件已保存"), generatedFile, QMessageBox::Ok);
+		QString generatedFile = fileInfo.path() + "/generated.aepx";
+		XMLError ret = m_parser->saveAs(generatedFile.toLocal8Bit());
+		if (ret == XML_SUCCESS)
+		{
+			QMessageBox::information(this, QStringLiteral("文件已保存"), generatedFile, QMessageBox::Ok);
+		}
+		else
+		{
+			QMessageBox::warning(this, QStringLiteral("文件保存失败"), QStringLiteral("保存文件出错，请重新尝试！"), QMessageBox::Ok);
+		}
 	}
 }
 

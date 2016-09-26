@@ -203,7 +203,7 @@ public:
 
         retranslateUi(ReplaceAETemplateClass);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(ReplaceAETemplateClass);

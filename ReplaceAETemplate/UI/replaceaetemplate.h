@@ -33,7 +33,7 @@ private:
 	XMLParser* m_parser;
 	QLabel* m_dir;
 	int m_selectedTextIndex;		// 旧文本在aepx中的索引值
-	QString m_selectedText;				// 旧文本内容
+	QString m_selectedText;			// 旧文本内容
 	QString m_selectedFile;			// 当前选择的aepx文件
 	QString m_selectedImage;		// 旧图片路径
 };
