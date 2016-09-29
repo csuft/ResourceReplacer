@@ -26,6 +26,7 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -64,6 +65,7 @@ public:
     QPushButton *chooseImageButton;
     QLineEdit *destImagePathLineEdit;
     QPushButton *replaceImageButton;
+    QTextEdit *imagePathEdit;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuAbout;
@@ -73,7 +75,7 @@ public:
     {
         if (ReplaceAETemplateClass->objectName().isEmpty())
             ReplaceAETemplateClass->setObjectName(QStringLiteral("ReplaceAETemplateClass"));
-        ReplaceAETemplateClass->resize(600, 400);
+        ReplaceAETemplateClass->resize(609, 474);
         actionOpenFile = new QAction(ReplaceAETemplateClass);
         actionOpenFile->setObjectName(QStringLiteral("actionOpenFile"));
         actionCloseFile = new QAction(ReplaceAETemplateClass);
@@ -88,23 +90,23 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(9, 9, 591, 341));
+        tabWidget->setGeometry(QRect(20, 10, 581, 411));
         tabWidget->setTabPosition(QTabWidget::West);
         tabWidget->setTabShape(QTabWidget::Rounded);
         replaceCharTab = new QWidget();
         replaceCharTab->setObjectName(QStringLiteral("replaceCharTab"));
         textListWidget = new QListWidget(replaceCharTab);
         textListWidget->setObjectName(QStringLiteral("textListWidget"));
-        textListWidget->setGeometry(QRect(9, 9, 181, 311));
+        textListWidget->setGeometry(QRect(9, 9, 181, 391));
         groupBox = new QGroupBox(replaceCharTab);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(200, 10, 351, 81));
+        groupBox->setGeometry(QRect(200, 10, 351, 151));
         originalTextLabel = new QLabel(groupBox);
         originalTextLabel->setObjectName(QStringLiteral("originalTextLabel"));
         originalTextLabel->setGeometry(QRect(10, 20, 331, 51));
         groupBox_2 = new QGroupBox(replaceCharTab);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
-        groupBox_2->setGeometry(QRect(200, 100, 351, 221));
+        groupBox_2->setGeometry(QRect(200, 170, 351, 231));
         label = new QLabel(groupBox_2);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(10, 30, 54, 12));
@@ -126,10 +128,10 @@ public:
         replaceImageTab->setObjectName(QStringLiteral("replaceImageTab"));
         imageListWidget = new QListWidget(replaceImageTab);
         imageListWidget->setObjectName(QStringLiteral("imageListWidget"));
-        imageListWidget->setGeometry(QRect(9, 9, 181, 311));
+        imageListWidget->setGeometry(QRect(10, 10, 181, 311));
         groupBox_3 = new QGroupBox(replaceImageTab);
         groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
-        groupBox_3->setGeometry(QRect(200, 9, 341, 311));
+        groupBox_3->setGeometry(QRect(200, 10, 351, 311));
         imagePreviewLabel = new QLabel(groupBox_3);
         imagePreviewLabel->setObjectName(QStringLiteral("imagePreviewLabel"));
         imagePreviewLabel->setGeometry(QRect(10, 50, 321, 221));
@@ -179,11 +181,15 @@ public:
 
         horizontalLayout_5->addWidget(replaceImageButton);
 
+        imagePathEdit = new QTextEdit(replaceImageTab);
+        imagePathEdit->setObjectName(QStringLiteral("imagePathEdit"));
+        imagePathEdit->setGeometry(QRect(10, 330, 541, 71));
+        imagePathEdit->setReadOnly(true);
         tabWidget->addTab(replaceImageTab, QString());
         ReplaceAETemplateClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(ReplaceAETemplateClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 600, 23));
+        menuBar->setGeometry(QRect(0, 0, 609, 23));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuAbout = new QMenu(menuBar);

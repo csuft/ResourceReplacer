@@ -11,9 +11,10 @@ ReplaceAETemplate::ReplaceAETemplate(QWidget *parent)
 	ui.setupUi(this);
 	setWindowTitle(QStringLiteral("AE模板内容替换工具v1.0"));
 	setWindowIcon(QIcon(":/images/logo"));
-	setFixedHeight(400);
-	setFixedWidth(600);
+	setFixedHeight(470);
+	setFixedWidth(609);
 
+	ui.tabWidget->setCurrentIndex(0);
 	ui.imagePreviewLabel->setPixmap(QPixmap(":/images/placeholder"));
 	ui.replaceTextButton->setDisabled(true);
 	ui.replaceImageButton->setDisabled(true);
@@ -48,6 +49,7 @@ ReplaceAETemplate::~ReplaceAETemplate()
 
 void ReplaceAETemplate::onOpenFile()
 {
+	onCloseFile();
 	m_selectedFile = QFileDialog::getOpenFileName(this, QStringLiteral("选择AE模板工程"), QStringLiteral("C:"), tr("AE Template Files (*.aepx)"));
 	if (!m_selectedFile.isEmpty())
 	{ 
@@ -113,6 +115,7 @@ void ReplaceAETemplate::onCloseFile()
 	ui.actionCloseFile->setDisabled(true);
 	ui.actionSaveFile->setDisabled(true);
 	ui.originalTextLabel->clear();
+	ui.imagePathEdit->clear();
 	m_selectedImage.clear();
 	m_selectedText.clear();
 	m_selectedFile.clear();
@@ -153,6 +156,7 @@ void ReplaceAETemplate::onReplaceImage()
 		QPixmap newImage(newFilePath);
 		newImage = newImage.scaled(QSize(321, 221), Qt::KeepAspectRatio);
 		ui.imagePreviewLabel->setPixmap(newImage);
+		ui.imagePathEdit->setText(newFilePath);
 		QList<QListWidgetItem*> listItems = ui.imageListWidget->findItems(m_selectedImage, Qt::MatchExactly);
 		listItems[0]->setText(newFilePath);
 	}
@@ -191,17 +195,18 @@ void ReplaceAETemplate::onTextItemClicked(QListWidgetItem* item)
 void ReplaceAETemplate::onImageItemClicked(QListWidgetItem* item)
 {
 	m_selectedImage = item->text();
+	ui.imagePathEdit->setText(m_selectedImage);
 	ui.imageCountLabel->setText(item->data(Qt::ToolTipRole).toString());
 	ui.destImagePathLineEdit->clear();
 	QFile imageFile(m_selectedImage);
 	if (imageFile.exists())
-	{
+	{ 
 		QPixmap oldImage(m_selectedImage);
 		oldImage = oldImage.scaled(QSize(321, 221), Qt::KeepAspectRatio);
 		ui.imagePreviewLabel->setPixmap(oldImage);
 	}
 	else
-	{
+	{ 
 		ui.imagePreviewLabel->setPixmap(QPixmap(":/images/placeholder"));
 	}
 }

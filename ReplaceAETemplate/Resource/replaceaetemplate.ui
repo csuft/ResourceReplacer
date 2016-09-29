@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>400</height>
+    <width>609</width>
+    <height>474</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>9</x>
-      <y>9</y>
-      <width>591</width>
-      <height>341</height>
+      <x>20</x>
+      <y>10</y>
+      <width>581</width>
+      <height>411</height>
      </rect>
     </property>
     <property name="tabPosition">
@@ -45,7 +45,7 @@
         <x>9</x>
         <y>9</y>
         <width>181</width>
-        <height>311</height>
+        <height>391</height>
        </rect>
       </property>
      </widget>
@@ -55,7 +55,7 @@
         <x>200</x>
         <y>10</y>
         <width>351</width>
-        <height>81</height>
+        <height>151</height>
        </rect>
       </property>
       <property name="title">
@@ -79,9 +79,9 @@
       <property name="geometry">
        <rect>
         <x>200</x>
-        <y>100</y>
+        <y>170</y>
         <width>351</width>
-        <height>221</height>
+        <height>231</height>
        </rect>
       </property>
       <property name="title">
@@ -166,8 +166,8 @@
      <widget class="QListWidget" name="imageListWidget">
       <property name="geometry">
        <rect>
-        <x>9</x>
-        <y>9</y>
+        <x>10</x>
+        <y>10</y>
         <width>181</width>
         <height>311</height>
        </rect>
@@ -177,8 +177,8 @@
       <property name="geometry">
        <rect>
         <x>200</x>
-        <y>9</y>
-        <width>341</width>
+        <y>10</y>
+        <width>351</width>
         <height>311</height>
        </rect>
       </property>
@@ -271,6 +271,19 @@
        </layout>
       </widget>
      </widget>
+     <widget class="QTextEdit" name="imagePathEdit">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>330</y>
+        <width>541</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -279,7 +292,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>609</width>
      <height>23</height>
     </rect>
    </property>

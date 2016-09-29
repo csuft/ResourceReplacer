@@ -98,12 +98,17 @@ void XMLParser::parseTemplateItem(XMLNode* rootElement, int& index)
 				bool isNormalFormat = isImageFormat(sspcBdata);
 				if (isNormalFormat)
 				{
-					XMLElement* Als2Node = sspcNode->NextSiblingElement("Als2");
-					if (Als2Node == nullptr)
+					XMLElement* AlNode = sspcNode->NextSiblingElement("Als2");
+					if (AlNode == nullptr)
 					{
-						return;
+						// ¼æÈÝCS6µ¼³öµÄXML
+						AlNode = sspcNode->NextSiblingElement("Alas");
+						if (AlNode == nullptr)
+						{
+							return;
+						}
 					}
-					XMLElement* fileReferenceNode = Als2Node->FirstChildElement("fileReference");
+					XMLElement* fileReferenceNode = AlNode->FirstChildElement("fileReference");
 					if (fileReferenceNode == nullptr)
 					{
 						return;
@@ -346,10 +351,14 @@ void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int
 					bool isNormalFormat = isImageFormat(sspcBdata);
 					if (isNormalFormat)
 					{
-						XMLElement* Als2Node = sspcNode->NextSiblingElement("Als2");
-						if (Als2Node != nullptr)
+						XMLElement* AlNode = sspcNode->NextSiblingElement("Als2");
+						if (AlNode == nullptr)
 						{
-							XMLElement* fileReferenceNode = Als2Node->FirstChildElement("fileReference");
+							AlNode = sspcNode->NextSiblingElement("Alas");
+						}
+						if (AlNode != nullptr)
+						{
+							XMLElement* fileReferenceNode = AlNode->FirstChildElement("fileReference");
 							if (fileReferenceNode != nullptr)
 							{
 								if (counter == index && type == REPLACE_IMAGE)
