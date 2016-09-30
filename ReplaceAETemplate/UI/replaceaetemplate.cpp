@@ -158,7 +158,11 @@ void ReplaceAETemplate::onReplaceImage()
 		ui.imagePreviewLabel->setPixmap(newImage);
 		ui.imagePathEdit->setText(newFilePath);
 		QList<QListWidgetItem*> listItems = ui.imageListWidget->findItems(m_selectedImage, Qt::MatchExactly);
-		listItems[0]->setText(newFilePath);
+		if (!listItems.empty())
+		{
+			listItems[0]->setText(newFilePath);
+			m_selectedImage = newFilePath;
+		}
 	}
 	else
 	{
@@ -174,7 +178,12 @@ void ReplaceAETemplate::onReplaceText()
 	{
 		QMessageBox::information(this, QStringLiteral("执行结果"), QStringLiteral("已成功替换文本"), QMessageBox::Ok);
 		QList<QListWidgetItem*> listItems = ui.textListWidget->findItems(m_selectedText, Qt::MatchExactly);
-		listItems[0]->setText(newText);
+		if (!listItems.empty())
+		{
+			listItems[0]->setText(newText);
+			m_selectedText = newText;
+			ui.originalTextLabel->setText(newText);
+		} 
 	}
 	else
 	{

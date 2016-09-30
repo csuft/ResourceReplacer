@@ -392,6 +392,7 @@ void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int
 											optiNode->SetAttribute("bdata", buffer);
 										}
 										delete[] buffer;
+										++counter;
 										return;
 									} 
 								}
