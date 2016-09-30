@@ -196,8 +196,7 @@ bool XMLParser::replaceTemplateText(const std::string& newText, int index)
 
 	while (ItemNode != nullptr)
 	{
-		doReplace(ItemNode, newText, counter, index, REPLACE_TEXT);
-		if (counter == index)
+		if (doReplace(ItemNode, newText, counter, index, REPLACE_TEXT))
 		{
 			break;
 		}
@@ -217,8 +216,7 @@ bool XMLParser::replaceTemplateImage(const std::string& newImagePath, const int 
 
 	while (ItemNode != nullptr)
 	{
-		doReplace(ItemNode, newImagePath, counter, index, REPLACE_IMAGE);
-		if (counter == index)
+		if (doReplace(ItemNode, newImagePath, counter, index, REPLACE_IMAGE))
 		{
 			break;
 		}
@@ -325,11 +323,11 @@ XMLError XMLParser::saveAs(QByteArray& filePath)
 	return mXMLDocument->SaveFile(std::string(filePath).c_str());
 }
 
-void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int& counter, int index, int type)
+bool XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int& counter, int index, int type)
 {
 	if (rootElement == nullptr)
 	{
-		return;
+		return false;
 	}
 
 	XMLElement* str = rootElement->FirstChildElement("string");
@@ -393,7 +391,7 @@ void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int
 										}
 										delete[] buffer;
 										++counter;
-										return;
+										return true;
 									} 
 								}
 								++counter;
@@ -463,7 +461,7 @@ void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int
 																	tdb4Node->SetAttribute("bdata", buffer);
 																}
 																delete[] buffer;
-																return;
+																return true;
 															}
 														}
 													} 
@@ -485,18 +483,22 @@ void XMLParser::doReplace(XMLNode* rootElement, const std::string& contents, int
 			XMLElement* SfdrNode = idtaNode->NextSiblingElement("Sfdr");
 			if (SfdrNode == nullptr)
 			{
-				return;
+				return false;
 			}
 			XMLElement* tempItem = SfdrNode->FirstChildElement("Item");
 			while (tempItem != nullptr)
 			{
-				doReplace(tempItem, contents, counter, index, type);
+				if (doReplace(tempItem, contents, counter, index, type))
+				{
+					break;
+				} 
 				tempItem = tempItem->NextSiblingElement("Item");
 			}
 		}
 		else
 		{
-			return;
+			return false;
 		}
 	} 
+	return false;
 }

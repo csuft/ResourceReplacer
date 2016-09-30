@@ -162,6 +162,7 @@ void ReplaceAETemplate::onReplaceImage()
 		{
 			listItems[0]->setText(newFilePath);
 			m_selectedImage = newFilePath;
+			ui.replaceImageButton->setDisabled(true);
 		}
 	}
 	else
