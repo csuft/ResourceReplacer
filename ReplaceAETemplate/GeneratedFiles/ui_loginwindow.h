@@ -33,12 +33,16 @@ public:
     QLabel *label_2;
     QLineEdit *passwordLineEdit;
     QPushButton *loginButton;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label_4;
+    QLabel *macAddress;
 
     void setupUi(QDialog *LoginWindow)
     {
         if (LoginWindow->objectName().isEmpty())
             LoginWindow->setObjectName(QStringLiteral("LoginWindow"));
-        LoginWindow->resize(313, 163);
+        LoginWindow->resize(313, 199);
         LoginWindow->setContextMenuPolicy(Qt::NoContextMenu);
         label = new QLabel(LoginWindow);
         label->setObjectName(QStringLiteral("label"));
@@ -74,6 +78,26 @@ public:
 
         horizontalLayout->addWidget(loginButton);
 
+        widget = new QWidget(LoginWindow);
+        widget->setObjectName(QStringLiteral("widget"));
+        widget->setGeometry(QRect(10, 160, 291, 31));
+        horizontalLayout_2 = new QHBoxLayout(widget);
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        label_4 = new QLabel(widget);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setEnabled(true);
+        label_4->setMaximumSize(QSize(60, 16777215));
+
+        horizontalLayout_2->addWidget(label_4);
+
+        macAddress = new QLabel(widget);
+        macAddress->setObjectName(QStringLiteral("macAddress"));
+
+        horizontalLayout_2->addWidget(macAddress);
+
 
         retranslateUi(LoginWindow);
 
@@ -87,6 +111,8 @@ public:
         label_3->setText(QApplication::translate("LoginWindow", "AE\346\250\241\346\235\277\345\206\205\345\256\271\346\233\277\346\215\242\345\267\245\345\205\267v1.0", 0));
         label_2->setText(QApplication::translate("LoginWindow", "\347\231\273\345\275\225\345\217\243\344\273\244\357\274\232", 0));
         loginButton->setText(QApplication::translate("LoginWindow", "\347\231\273\345\275\225", 0));
+        label_4->setText(QApplication::translate("LoginWindow", "MAC\345\234\260\345\235\200\357\274\232", 0));
+        macAddress->setText(QString());
     } // retranslateUi
 
 };

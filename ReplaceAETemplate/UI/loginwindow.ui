@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>313</width>
-    <height>163</height>
+    <height>199</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -80,6 +80,41 @@ font: 10pt &quot;微软雅黑&quot;;</string>
      <widget class="QPushButton" name="loginButton">
       <property name="text">
        <string>登录</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>160</y>
+     <width>291</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QLabel" name="label_4">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>60</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>MAC地址：</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="macAddress">
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </item>

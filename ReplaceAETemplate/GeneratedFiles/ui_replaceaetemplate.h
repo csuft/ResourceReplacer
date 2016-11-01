@@ -27,6 +27,7 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTextEdit>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -39,10 +40,15 @@ public:
     QAction *actionQuitApplication;
     QAction *actionDeveloper;
     QAction *actionSaveFile;
+    QAction *actionSerialNum;
     QWidget *centralWidget;
+    QHBoxLayout *horizontalLayout;
     QTabWidget *tabWidget;
     QWidget *replaceCharTab;
+    QHBoxLayout *horizontalLayout_3;
+    QHBoxLayout *horizontalLayout_2;
     QListWidget *textListWidget;
+    QVBoxLayout *verticalLayout;
     QGroupBox *groupBox;
     QLabel *originalTextLabel;
     QGroupBox *groupBox_2;
@@ -52,15 +58,16 @@ public:
     QLabel *label_2;
     QLabel *label_4;
     QWidget *replaceImageTab;
+    QVBoxLayout *verticalLayout_3;
+    QHBoxLayout *horizontalLayout_4;
     QListWidget *imageListWidget;
     QGroupBox *groupBox_3;
-    QLabel *imagePreviewLabel;
-    QWidget *layoutWidget;
+    QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_6;
     QLabel *label_3;
     QLabel *imageCountLabel;
     QSpacerItem *horizontalSpacer_3;
-    QWidget *layoutWidget1;
+    QLabel *imagePreviewLabel;
     QHBoxLayout *horizontalLayout_5;
     QPushButton *chooseImageButton;
     QLineEdit *destImagePathLineEdit;
@@ -75,7 +82,8 @@ public:
     {
         if (ReplaceAETemplateClass->objectName().isEmpty())
             ReplaceAETemplateClass->setObjectName(QStringLiteral("ReplaceAETemplateClass"));
-        ReplaceAETemplateClass->resize(609, 474);
+        ReplaceAETemplateClass->resize(766, 533);
+        ReplaceAETemplateClass->setMinimumSize(QSize(766, 533));
         actionOpenFile = new QAction(ReplaceAETemplateClass);
         actionOpenFile->setObjectName(QStringLiteral("actionOpenFile"));
         actionCloseFile = new QAction(ReplaceAETemplateClass);
@@ -86,27 +94,46 @@ public:
         actionDeveloper->setObjectName(QStringLiteral("actionDeveloper"));
         actionSaveFile = new QAction(ReplaceAETemplateClass);
         actionSaveFile->setObjectName(QStringLiteral("actionSaveFile"));
+        actionSerialNum = new QAction(ReplaceAETemplateClass);
+        actionSerialNum->setObjectName(QStringLiteral("actionSerialNum"));
         centralWidget = new QWidget(ReplaceAETemplateClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        horizontalLayout = new QHBoxLayout(centralWidget);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(20, 10, 581, 411));
         tabWidget->setTabPosition(QTabWidget::West);
         tabWidget->setTabShape(QTabWidget::Rounded);
         replaceCharTab = new QWidget();
         replaceCharTab->setObjectName(QStringLiteral("replaceCharTab"));
+        horizontalLayout_3 = new QHBoxLayout(replaceCharTab);
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         textListWidget = new QListWidget(replaceCharTab);
         textListWidget->setObjectName(QStringLiteral("textListWidget"));
-        textListWidget->setGeometry(QRect(9, 9, 181, 391));
+        textListWidget->setMaximumSize(QSize(300, 16777215));
+
+        horizontalLayout_2->addWidget(textListWidget);
+
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(6);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         groupBox = new QGroupBox(replaceCharTab);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(200, 10, 351, 151));
         originalTextLabel = new QLabel(groupBox);
         originalTextLabel->setObjectName(QStringLiteral("originalTextLabel"));
         originalTextLabel->setGeometry(QRect(10, 20, 331, 51));
+
+        verticalLayout->addWidget(groupBox);
+
         groupBox_2 = new QGroupBox(replaceCharTab);
         groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
-        groupBox_2->setGeometry(QRect(200, 170, 351, 231));
         label = new QLabel(groupBox_2);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(10, 30, 54, 12));
@@ -123,73 +150,108 @@ public:
         label_4->setObjectName(QStringLiteral("label_4"));
         label_4->setGeometry(QRect(10, 110, 331, 41));
         label_4->setStyleSheet(QStringLiteral("font-weight: bold;"));
+
+        verticalLayout->addWidget(groupBox_2);
+
+
+        horizontalLayout_2->addLayout(verticalLayout);
+
+
+        horizontalLayout_3->addLayout(horizontalLayout_2);
+
         tabWidget->addTab(replaceCharTab, QString());
         replaceImageTab = new QWidget();
         replaceImageTab->setObjectName(QStringLiteral("replaceImageTab"));
+        verticalLayout_3 = new QVBoxLayout(replaceImageTab);
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
         imageListWidget = new QListWidget(replaceImageTab);
         imageListWidget->setObjectName(QStringLiteral("imageListWidget"));
-        imageListWidget->setGeometry(QRect(10, 10, 181, 311));
+        imageListWidget->setMinimumSize(QSize(250, 0));
+        imageListWidget->setMaximumSize(QSize(300, 16777215));
+
+        horizontalLayout_4->addWidget(imageListWidget);
+
         groupBox_3 = new QGroupBox(replaceImageTab);
         groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
-        groupBox_3->setGeometry(QRect(200, 10, 351, 311));
-        imagePreviewLabel = new QLabel(groupBox_3);
-        imagePreviewLabel->setObjectName(QStringLiteral("imagePreviewLabel"));
-        imagePreviewLabel->setGeometry(QRect(10, 50, 321, 221));
-        layoutWidget = new QWidget(groupBox_3);
-        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(10, 22, 321, 22));
-        horizontalLayout_6 = new QHBoxLayout(layoutWidget);
+        verticalLayout_2 = new QVBoxLayout(groupBox_3);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setSpacing(6);
-        horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
-        horizontalLayout_6->setContentsMargins(0, 0, 0, 0);
-        label_3 = new QLabel(layoutWidget);
+        label_3 = new QLabel(groupBox_3);
         label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setMaximumSize(QSize(16777215, 35));
 
         horizontalLayout_6->addWidget(label_3);
 
-        imageCountLabel = new QLabel(layoutWidget);
+        imageCountLabel = new QLabel(groupBox_3);
         imageCountLabel->setObjectName(QStringLiteral("imageCountLabel"));
 
         horizontalLayout_6->addWidget(imageCountLabel);
 
-        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_3 = new QSpacerItem(40, 35, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_6->addItem(horizontalSpacer_3);
 
-        layoutWidget1 = new QWidget(groupBox_3);
-        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
-        layoutWidget1->setGeometry(QRect(10, 270, 321, 31));
-        horizontalLayout_5 = new QHBoxLayout(layoutWidget1);
+
+        verticalLayout_2->addLayout(horizontalLayout_6);
+
+        imagePreviewLabel = new QLabel(groupBox_3);
+        imagePreviewLabel->setObjectName(QStringLiteral("imagePreviewLabel"));
+        imagePreviewLabel->setMinimumSize(QSize(321, 221));
+
+        verticalLayout_2->addWidget(imagePreviewLabel);
+
+        horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setSpacing(6);
-        horizontalLayout_5->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
-        horizontalLayout_5->setContentsMargins(0, 0, 0, 0);
-        chooseImageButton = new QPushButton(layoutWidget1);
+        chooseImageButton = new QPushButton(groupBox_3);
         chooseImageButton->setObjectName(QStringLiteral("chooseImageButton"));
 
         horizontalLayout_5->addWidget(chooseImageButton);
 
-        destImagePathLineEdit = new QLineEdit(layoutWidget1);
+        destImagePathLineEdit = new QLineEdit(groupBox_3);
         destImagePathLineEdit->setObjectName(QStringLiteral("destImagePathLineEdit"));
         destImagePathLineEdit->setReadOnly(true);
 
         horizontalLayout_5->addWidget(destImagePathLineEdit);
 
-        replaceImageButton = new QPushButton(layoutWidget1);
+        replaceImageButton = new QPushButton(groupBox_3);
         replaceImageButton->setObjectName(QStringLiteral("replaceImageButton"));
 
         horizontalLayout_5->addWidget(replaceImageButton);
 
+
+        verticalLayout_2->addLayout(horizontalLayout_5);
+
+
+        horizontalLayout_4->addWidget(groupBox_3);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_4);
+
         imagePathEdit = new QTextEdit(replaceImageTab);
         imagePathEdit->setObjectName(QStringLiteral("imagePathEdit"));
-        imagePathEdit->setGeometry(QRect(10, 330, 541, 71));
+        imagePathEdit->setMaximumSize(QSize(16777215, 35));
         imagePathEdit->setReadOnly(true);
+
+        verticalLayout_3->addWidget(imagePathEdit);
+
         tabWidget->addTab(replaceImageTab, QString());
+
+        horizontalLayout->addWidget(tabWidget);
+
         ReplaceAETemplateClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(ReplaceAETemplateClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 609, 23));
+        menuBar->setGeometry(QRect(0, 0, 766, 23));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuAbout = new QMenu(menuBar);
@@ -206,10 +268,11 @@ public:
         menuFile->addAction(actionSaveFile);
         menuFile->addAction(actionQuitApplication);
         menuAbout->addAction(actionDeveloper);
+        menuAbout->addAction(actionSerialNum);
 
         retranslateUi(ReplaceAETemplateClass);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(ReplaceAETemplateClass);
@@ -227,6 +290,7 @@ public:
         actionDeveloper->setText(QApplication::translate("ReplaceAETemplateClass", "\345\274\200\345\217\221\350\200\205(&D)", 0));
         actionSaveFile->setText(QApplication::translate("ReplaceAETemplateClass", "\344\277\235\345\255\230\346\226\207\344\273\266(&S)", 0));
         actionSaveFile->setShortcut(QApplication::translate("ReplaceAETemplateClass", "Ctrl+S", 0));
+        actionSerialNum->setText(QApplication::translate("ReplaceAETemplateClass", "\350\256\241\347\256\227\345\272\217\345\210\227\345\217\267", 0));
         groupBox->setTitle(QApplication::translate("ReplaceAETemplateClass", "\345\216\237\345\247\213\346\226\207\346\234\254", 0));
         originalTextLabel->setText(QString());
         groupBox_2->setTitle(QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\346\223\215\344\275\234", 0));
@@ -239,9 +303,9 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(replaceCharTab), QApplication::translate("ReplaceAETemplateClass", "\346\250\241\346\235\277\346\226\207\345\255\227\346\233\277\346\215\242", 0));
         tabWidget->setTabToolTip(tabWidget->indexOf(replaceCharTab), QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\344\272\214\350\277\233\345\210\266\346\250\241\346\235\277\346\226\207\344\273\266\344\270\255\347\232\204\346\214\207\345\256\232\345\255\227\347\254\246\344\270\262", 0));
         groupBox_3->setTitle(QApplication::translate("ReplaceAETemplateClass", "\346\223\215\344\275\234\351\235\242\346\235\277", 0));
-        imagePreviewLabel->setText(QString());
         label_3->setText(QApplication::translate("ReplaceAETemplateClass", "\345\233\276\347\211\207\350\265\204\346\272\220ID:", 0));
         imageCountLabel->setText(QApplication::translate("ReplaceAETemplateClass", "0", 0));
+        imagePreviewLabel->setText(QString());
         chooseImageButton->setText(QApplication::translate("ReplaceAETemplateClass", "\346\233\277\346\215\242\346\210\220...", 0));
         replaceImageButton->setText(QApplication::translate("ReplaceAETemplateClass", "\347\241\256\345\256\232", 0));
         tabWidget->setTabText(tabWidget->indexOf(replaceImageTab), QApplication::translate("ReplaceAETemplateClass", "\346\250\241\346\235\277\345\233\276\347\211\207\346\233\277\346\215\242", 0));

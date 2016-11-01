@@ -17,10 +17,11 @@ private slots:
 	void onPasswordChanged(const QString & text);
 
 protected:
-	void closeEvent(QCloseEvent *event);
+	void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 private:
 	Ui::LoginWindow ui;
+	QString m_macAddress;
 };
 
 #endif // LOGINWINDOW_H
