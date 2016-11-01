@@ -26,6 +26,7 @@ private slots:
 	void onImageItemClicked(QListWidgetItem* item);
 	void onNewTextChanged(const QString& newText);
 	void onImageChoosed();
+	void onSerailNum();
 
 private:
 	Ui::ReplaceAETemplateClass ui;

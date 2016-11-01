@@ -4,6 +4,9 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QSettings>
+#include <QCryptographicHash>
+#include <QInputDialog>
 
 ReplaceAETemplate::ReplaceAETemplate(QWidget *parent)
 : QMainWindow(parent), m_parser(nullptr), m_selectedText(-1)
@@ -11,8 +14,7 @@ ReplaceAETemplate::ReplaceAETemplate(QWidget *parent)
 	ui.setupUi(this);
 	setWindowTitle(QStringLiteral("AE模板内容替换工具v1.0"));
 	setWindowIcon(QIcon(":/images/logo"));
-	setFixedHeight(470);
-	setFixedWidth(609);
+	setMinimumSize(766, 533);
 
 	ui.tabWidget->setCurrentIndex(0);
 	ui.imagePreviewLabel->setPixmap(QPixmap(":/images/placeholder"));
@@ -23,7 +25,21 @@ ReplaceAETemplate::ReplaceAETemplate(QWidget *parent)
 	ui.newTextLineEdit->setDisabled(true);
 	m_dir = new QLabel(this); 
 	ui.statusBar->addWidget(m_dir);
-	 
+
+	QSettings settings("AE", "login");
+	settings.beginGroup("info");
+	int userType = settings.value("userType", 0).toInt();
+	settings.endGroup();
+	
+	if (userType == 0)
+	{
+		ui.actionSerialNum->setDisabled(true);
+	}
+	else
+	{
+		ui.actionSerialNum->setEnabled(true);
+	}
+
 	connect(ui.replaceImageButton, SIGNAL(clicked()), this, SLOT(onReplaceImage()));
 	connect(ui.replaceTextButton, SIGNAL(clicked()), this, SLOT(onReplaceText()));
 	connect(ui.actionQuitApplication, SIGNAL(triggered()), this, SLOT(onQuitApp()));
@@ -31,6 +47,7 @@ ReplaceAETemplate::ReplaceAETemplate(QWidget *parent)
 	connect(ui.actionOpenFile, SIGNAL(triggered()), this, SLOT(onOpenFile()));
 	connect(ui.actionSaveFile, SIGNAL(triggered()), this, SLOT(onSaveFile()));
 	connect(ui.actionDeveloper, SIGNAL(triggered()), this, SLOT(onDeveloper()));
+	connect(ui.actionSerialNum, SIGNAL(triggered()), this, SLOT(onSerailNum()));
 	connect(ui.textListWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onTextItemClicked(QListWidgetItem*)));
 	connect(ui.imageListWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onImageItemClicked(QListWidgetItem*)));
 	connect(ui.newTextLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onNewTextChanged(const QString&)));
@@ -248,5 +265,14 @@ void ReplaceAETemplate::onImageChoosed()
 		}
 		
 		ui.destImagePathLineEdit->setText(fileName);
+	}
+}
+
+void ReplaceAETemplate::onSerailNum()
+{
+	QString mac = QInputDialog::getText(this, QStringLiteral("计算序列号"), QStringLiteral("输入MAC地址："));
+	if (!mac.isEmpty())
+	{
+		QMessageBox::information(this, QStringLiteral("计算结果"), QString(QCryptographicHash::hash(mac.toUtf8(), QCryptographicHash::Md5).toHex()), QMessageBox::Ok);
 	}
 }
